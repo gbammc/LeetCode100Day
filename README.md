@@ -1,3 +1,19 @@
+[1262. Greatest Sum Divisible by Three](https://leetcode.com/contest/weekly-contest-163/problems/greatest-sum-divisible-by-three/)
+``` swift
+func maxSumDivThree(_ nums: [Int]) -> Int {
+    // dp is the maximum value after each iteration, with reminder 0, 2, 1
+    var dp = [0, Int.min, Int.min]
+    for n in nums {
+        var nextdp = [0, 0, 0]
+        nextdp[0] = max(dp[n % 3] + n, dp[0])
+        nextdp[1] = max(dp[(n + 1) % 3] + n, dp[1])
+        nextdp[2] = max(dp[(n + 2) % 3] + n, dp[2])
+        dp = nextdp
+    }
+    return dp[0]
+}
+```
+
 [1261. Find Elements in a Contaminated Binary Tree](https://leetcode.com/contest/weekly-contest-163/problems/find-elements-in-a-contaminated-binary-tree/)
 ``` swift
 class FindElements {
