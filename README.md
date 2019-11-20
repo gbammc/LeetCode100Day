@@ -1,3 +1,26 @@
+[1252. Cells with Odd Values in a Matrix](https://leetcode.com/contest/weekly-contest-162/problems/cells-with-odd-values-in-a-matrix/)
+``` swift
+func oddCells(_ n: Int, _ m: Int, _ indices: [[Int]]) -> Int {
+    var res = 0
+    var matrix = [[Int]](repeating: [Int](repeating: 0, count: m), count: n)
+    for p in indices {
+        let (row, col) = (p[0], p[1])
+        for i in 0 ..< m {
+            matrix[row][i] += 1
+        }
+        for i in 0 ..< n {
+            matrix[i][col] += 1
+        }
+    }
+    for i in 0 ..< n {
+        for j in 0 ..< m where matrix[i][j] % 2 == 1 {
+            res += 1
+        }
+    }
+    return res
+}
+```
+
 [1262. Greatest Sum Divisible by Three](https://leetcode.com/contest/weekly-contest-163/problems/greatest-sum-divisible-by-three/)
 ``` swift
 func maxSumDivThree(_ nums: [Int]) -> Int {
