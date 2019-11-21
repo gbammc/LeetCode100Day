@@ -1,3 +1,35 @@
+[1253. Reconstruct a 2-Row Binary Matrix](https://leetcode.com/contest/weekly-contest-162/problems/reconstruct-a-2-row-binary-matrix/)
+``` swift
+func reconstructMatrix(_ upper: Int, _ lower: Int, _ colsum: [Int]) -> [[Int]] {
+    var res = [[Int]](repeating: [Int](repeating: 0, count: colsum.count), count: 2)
+    var upper = upper
+    var lower = lower
+    for i in 0 ..< colsum.count {
+        if colsum[i] == 2 {
+            upper -= 1
+            lower -= 1
+            res[0][i] = 1
+            res[1][i] = 1
+        } else if colsum[i] == 1 {
+            if upper >= lower {
+                upper -= 1
+                res[0][i] = 1
+            } else {
+                lower -= 1
+                res[1][i] = 1
+            }
+        }
+        if upper < 0 || lower < 0 {
+            return []
+        }
+    }
+    if upper > 0 || lower > 0 {
+        return []
+    }
+    return res
+}
+```
+
 [1252. Cells with Odd Values in a Matrix](https://leetcode.com/contest/weekly-contest-162/problems/cells-with-odd-values-in-a-matrix/)
 ``` swift
 func oddCells(_ n: Int, _ m: Int, _ indices: [[Int]]) -> Int {
