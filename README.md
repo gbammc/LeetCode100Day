@@ -1,3 +1,24 @@
+[1260. Shift 2D Grid](https://leetcode.com/contest/weekly-contest-163/problems/shift-2d-grid/)
+```swift
+func shiftGrid(_ grid: [[Int]], _ k: Int) -> [[Int]] {
+    let n = grid.count
+    let m = grid.first!.count
+    let k = k % (n * m)
+    var res = grid
+    
+    for i in 0 ..< n {
+        for j in 0 ..< m {
+            var targetJ = j + k
+            let targetI = (i + targetJ / m) % n
+            targetJ %= m
+            res[targetI][targetJ] = grid[i][j]
+        }
+    }
+    
+    return res
+}
+```
+
 [1253. Reconstruct a 2-Row Binary Matrix](https://leetcode.com/contest/weekly-contest-162/problems/reconstruct-a-2-row-binary-matrix/)
 ``` swift
 func reconstructMatrix(_ upper: Int, _ lower: Int, _ colsum: [Int]) -> [[Int]] {
