@@ -1,3 +1,41 @@
+[1208. Get Equal Substrings Within Budget](https://leetcode.com/problems/get-equal-substrings-within-budget/)
+``` swift
+func equalSubstring(_ s: String, _ t: String, _ maxCost: Int) -> Int {
+    let s = Array(s.utf8)
+    let t = Array(t.utf8)
+    
+    var costs = [Int](repeating: 0, count: s.count)
+    var rest = maxCost
+    var start = 0
+    var end = 0
+    var res = 0
+    
+    for i in 0 ..< s.count {
+        let cost = abs(Int(s[i]) - Int(t[i]))
+        costs[i] = cost
+        rest -= cost
+        if rest < 0 {
+            res = max(res, end - start)
+            
+            while start < end {
+                rest += costs[start]
+                start += 1
+                if rest >= 0 {
+                    break
+                }
+            }
+            if rest < 0 {
+                rest += cost
+                start += 1
+            }
+        }
+        end = i + 1
+    }
+    
+    return max(res, end - start)
+}
+```
+
 [1260. Shift 2D Grid](https://leetcode.com/contest/weekly-contest-163/problems/shift-2d-grid/)
 ```swift
 func shiftGrid(_ grid: [[Int]], _ k: Int) -> [[Int]] {
