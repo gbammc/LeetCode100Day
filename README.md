@@ -1,3 +1,16 @@
+[1266. Minimum Time Visiting All Points](https://leetcode.com/contest/weekly-contest-164/problems/minimum-time-visiting-all-points/)
+``` swift
+func minTimeToVisitAllPoints(_ points: [[Int]]) -> Int {
+    var res = 0
+    for i in 1 ..< points.count {
+        let diffX = abs(points[i][0] - points[i - 1][0])
+        let diffY = abs(points[i][1] - points[i - 1][1])
+        res += min(diffX, diffY) + abs(diffX - diffY)
+    }
+    return res
+}
+```
+
 [1208. Get Equal Substrings Within Budget](https://leetcode.com/problems/get-equal-substrings-within-budget/)
 ``` swift
 func equalSubstring(_ s: String, _ t: String, _ maxCost: Int) -> Int {
