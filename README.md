@@ -1,3 +1,33 @@
+[1267. Count Servers that Communicate](https://leetcode.com/problems/count-servers-that-communicate/)
+``` swift
+func countServers(_ grid: [[Int]]) -> Int {
+    var res = 0
+    let m = grid.count
+    let n = grid[0].count
+    
+    for i in 0 ..< m {
+        for j in 0 ..< n where grid[i][j] == 1 {
+            var found = false
+            for k in 0 ..< m where grid[k][j] == 1 && k != i {
+                found = true
+                break
+            }
+            if !found {
+                for k in 0 ..< n where grid[i][k] == 1 && k != j {
+                    found = true
+                    break
+                }
+            }
+            if found {
+                res += 1
+            }
+        }
+    }
+    
+    return res
+}
+```
+
 [1266. Minimum Time Visiting All Points](https://leetcode.com/contest/weekly-contest-164/problems/minimum-time-visiting-all-points/)
 ``` swift
 func minTimeToVisitAllPoints(_ points: [[Int]]) -> Int {
