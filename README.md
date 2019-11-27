@@ -1,3 +1,71 @@
+[1031. Maximum Sum of Two Non-Overlapping Subarrays](https://leetcode.com/problems/maximum-sum-of-two-non-overlapping-subarrays/)
+``` swift
+func maxSumTwoNoOverlap(_ A: [Int], _ L: Int, _ M: Int) -> Int {
+//        // best solution
+//        var sums = [Int](repeating: A[0], count: A.count)
+//        for i in 1 ..< A.count {
+//            sums[i] = sums[i - 1] + A[i]
+//        }
+//        var res = sums[L + M - 1]
+//        var Lmax = sums[L - 1] // max sum of contiguous L elements before the last M elements
+//        var Mmax = sums[M - 1] // max sum of contiguous M elements before the last L elements
+//        for i in L + M ..< A.count {
+//            Lmax = max(Lmax, sums[i - M] - sums[i - M - L])
+//            Mmax = max(Mmax, sums[i - L] - sums[i - M - L])
+//            res = max(res, sums[i] - sums[i - L] + Mmax)
+//            res = max(res, sums[i] - sums[i - M] + Lmax)
+//        }
+//        return res
+    
+    // origin solution
+    var res = 0
+    var sums = [Int](repeating: 0, count: A.count + 1)
+    for i in 0 ..< A.count {
+        sums[i + 1] = sums[i] + A[i]
+    }
+    for i in L ... A.count {
+        for j in M ... A.count where j <= i - L || i <= j - M {
+            let sumL = sums[i] - sums[i - L]
+            let sumM = sums[j] - sums[j - M]
+            res = max(res, sumL + sumM)
+        }
+    }
+    return res
+}
+```
+
+[969. Pancake Sorting](https://leetcode.com/problems/pancake-sorting/)
+``` swift
+func pancakeSort(_ A: [Int]) -> [Int] {
+    var A = A
+    var res = [Int]()
+    
+    func flip(_ array: inout [Int], _ index: Int) {
+        var l = 0
+        var r = index
+        while l < r {
+            (array[l], array[r]) = (array[r], array[l])
+            l += 1
+            r -= 1
+        }
+    }
+    
+    for i in stride(from: A.count, to: 1, by: -1) {
+        var index = 0
+        for j in 0 ..< i where A[j] == i {
+            index = j
+        }
+        
+        flip(&A, index)
+        flip(&A, i - 1)
+        
+        res.append(index + 1)
+        res.append(i)
+    }
+    return res
+}
+```
+
 [1267. Count Servers that Communicate](https://leetcode.com/problems/count-servers-that-communicate/)
 ``` swift
 func countServers(_ grid: [[Int]]) -> Int {
