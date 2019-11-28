@@ -1,3 +1,30 @@
+[835. Image Overlap](https://leetcode.com/problems/image-overlap/)
+``` swift
+func largestOverlap(_ A: [[Int]], _ B: [[Int]]) -> Int {
+    let n = A.count
+    var res = 0
+    var table = [[Int]](repeating: [Int](repeating: 0, count: 2 * n), count: 2 * n) // record the largest overlap with all shifts
+    
+    for i in 0 ..< n {
+        for j in 0 ..< n where A[i][j] == 1 {
+            for k in 0 ..< n {
+                for l in 0 ..< n where B[k][l] == 1 {
+                    table[i - k + n][j - l + n] += 1
+                }
+            }
+        }
+    }
+    
+    for row in table {
+        for cell in row {
+            res = max(res, cell)
+        }
+    }
+    
+    return res
+}
+```
+
 [1031. Maximum Sum of Two Non-Overlapping Subarrays](https://leetcode.com/problems/maximum-sum-of-two-non-overlapping-subarrays/)
 ``` swift
 func maxSumTwoNoOverlap(_ A: [Int], _ L: Int, _ M: Int) -> Int {
