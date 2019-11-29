@@ -1,3 +1,45 @@
+``` swift
+func maxSatisfied(_ customers: [Int], _ grumpy: [Int], _ X: Int) -> Int {
+    // best solution
+//    var res = 0
+//    var window = 0  // sliding window to record the number of unsatisfied customers for X minutes
+//    var maxValue = 0
+//    for i in 0 ..< customers.count {
+//        if grumpy[i] == 0 {
+//            res += customers[i]
+//        } else {
+//            window += customers[i]
+//        }
+//        if i >= X {
+//            window -= customers[i - X] * grumpy[i - X]
+//        }
+//        maxValue = max(maxValue, window)
+//    }
+//    
+//    return res + maxValue
+
+
+    // origin solution
+    var res = 0
+    var sums = [Int](repeating: 0, count: customers.count)
+    for i in 0 ..< customers.count {
+        res += customers[i] * (1 - grumpy[i])
+        
+        if i == 0 && grumpy[i] == 1 {
+            sums[i] = customers[0]
+        } else if i > 0 {
+            sums[i] = sums[i - 1] + (grumpy[i] == 0 ? 0 : customers[i])
+        }
+    }
+    
+    var maxDesatisfied = sums[X - 1]
+    for i in X ..< customers.count {
+        maxDesatisfied = max(maxDesatisfied, sums[i] - sums[i - X])
+    }
+    return res + maxDesatisfied
+}
+```
+
 [835. Image Overlap](https://leetcode.com/problems/image-overlap/)
 ``` swift
 func largestOverlap(_ A: [[Int]], _ B: [[Int]]) -> Int {
