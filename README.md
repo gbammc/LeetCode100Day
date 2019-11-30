@@ -1,3 +1,20 @@
+[769. Max Chunks To Make Sorted](https://leetcode.com/problems/max-chunks-to-make-sorted/)
+``` swift
+func maxChunksToSorted(_ arr: [Int]) -> Int {
+    var res = 1
+    var curMax = arr[0]
+    for i in 1 ..< arr.count {
+        if curMax < arr[i] && curMax < i {
+            res += 1
+        }
+        curMax = max(curMax, arr[i])
+    }
+    
+    return res
+}
+```
+
+[1052. Grumpy Bookstore Owner](https://leetcode.com/problems/grumpy-bookstore-owner/)
 ``` swift
 func maxSatisfied(_ customers: [Int], _ grumpy: [Int], _ X: Int) -> Int {
     // best solution
