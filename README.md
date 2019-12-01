@@ -1,3 +1,41 @@
+[1275. Find Winner on a Tic Tac Toe Game](https://leetcode.com/contest/weekly-contest-165/problems/find-winner-on-a-tic-tac-toe-game/)
+``` swift
+func tictactoe(_ moves: [[Int]]) -> String {
+    var board = [[Int]](repeating: [Int](repeating: -1, count: 3), count: 3)
+    for i in 0 ..< moves.count {
+        if i % 2 == 0 {
+            board[moves[i][0]][moves[i][1]] = 1
+        } else {
+            board[moves[i][0]][moves[i][1]] = 0
+        }
+    }
+    
+    // checks rows and columns
+    for i in 0 ..< 3 {
+        if board[0][i] == board[1][i] && board[1][i] == board[2][i] && board[0][i] != -1 {
+            return board[0][i] == 1 ? "A" : "B"
+        }
+        if board[i][0] == board[i][1] && board[i][1] == board[i][2] && board[i][0] != -1 {
+            return board[i][0] == 1 ? "A" : "B"
+        }
+    }
+    
+    // checks diagonal
+    if (board[0][0] == board[1][1] && board[1][1] == board[2][2] && board[0][0] != -1) {
+        return board[0][0] == 1 ? "A" : "B"
+    }
+    if (board[0][2] == board[1][1] && board[2][0] == board[1][1] && board[0][2] != -1) {
+        return board[0][2] == 1 ? "A" : "B"
+    }
+    
+    if moves.count == 9 {
+        return "Draw"
+    }
+    
+    return "Pending"
+}
+```
+
 [769. Max Chunks To Make Sorted](https://leetcode.com/problems/max-chunks-to-make-sorted/)
 ``` swift
 func maxChunksToSorted(_ arr: [Int]) -> Int {
