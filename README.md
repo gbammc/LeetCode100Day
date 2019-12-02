@@ -1,3 +1,17 @@
+[1276. Number of Burgers with No Waste of Ingredients](https://leetcode.com/problems/number-of-burgers-with-no-waste-of-ingredients/)
+``` swift
+// 鸡兔同笼问题
+func numOfBurgers(_ tomatoSlices: Int, _ cheeseSlices: Int) -> [Int] {
+    let tmp = (tomatoSlices - 2 * cheeseSlices)
+    let x = tmp / 2
+    if tmp >= 0 && tmp % 2 == 0 && cheeseSlices - x >= 0 {
+        return [x, cheeseSlices - x]
+    }
+    
+    return []
+}
+```
+
 [1275. Find Winner on a Tic Tac Toe Game](https://leetcode.com/contest/weekly-contest-165/problems/find-winner-on-a-tic-tac-toe-game/)
 ``` swift
 func tictactoe(_ moves: [[Int]]) -> String {
