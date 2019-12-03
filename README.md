@@ -1,3 +1,24 @@
+[667. Beautiful Arrangement II](https://leetcode.com/problems/beautiful-arrangement-ii/)
+``` swift
+func constructArray(_ n: Int, _ k: Int) -> [Int] {
+    var res = [Int]()
+    var l = 1
+    var r = k + 1
+    while l <= r {
+        res.append(l)
+        l += 1
+        if l <= r {
+            res.append(r)
+            r -= 1
+        }
+    }
+    for i in (k + 2) ..< n + 1 {
+        res.append(i)
+    }
+    return res
+}
+```
+
 [1276. Number of Burgers with No Waste of Ingredients](https://leetcode.com/problems/number-of-burgers-with-no-waste-of-ingredients/)
 ``` swift
 // 鸡兔同笼问题
