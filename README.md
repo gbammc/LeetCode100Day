@@ -1,3 +1,18 @@
+[48. Rotate Image](https://leetcode.com/problems/rotate-image/)
+```swift
+func rotate(_ matrix: inout [[Int]]) {
+    let count = matrix.count
+    for i in 0 ..< count / 2 {
+        (matrix[i], matrix[count - i - 1]) = (matrix[count - i - 1], matrix[i])
+    }
+    for i in 0 ..< count {
+        for j in i + 1 ..< matrix[0].count {
+            (matrix[i][j], matrix[j][i]) = (matrix[j][i], matrix[i][j])
+        }
+    }
+}
+```
+
 [667. Beautiful Arrangement II](https://leetcode.com/problems/beautiful-arrangement-ii/)
 ``` swift
 func constructArray(_ n: Int, _ k: Int) -> [Int] {
