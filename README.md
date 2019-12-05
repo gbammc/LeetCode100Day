@@ -1,3 +1,31 @@
+[900. RLE Iterator](https://leetcode.com/problems/rle-iterator/)
+``` swift
+class RLEIterator {
+    
+    var arr: [Int]
+    var index = 0
+
+    init(_ A: [Int]) {
+        arr = A
+    }
+    
+    func next(_ n: Int) -> Int {
+        var n = n
+        while index < arr.count && n > arr[index] {
+            n -= arr[index]
+            index += 2
+        }
+        
+        if index >= arr.count {
+            return -1
+        }
+        
+        arr[index] -= n
+        return arr[index + 1]
+    }
+}
+```
+
 [48. Rotate Image](https://leetcode.com/problems/rotate-image/)
 ```swift
 func rotate(_ matrix: inout [[Int]]) {
