@@ -1,3 +1,20 @@
+[926. Flip String to Monotone Increasing](https://leetcode.com/problems/flip-string-to-monotone-increasing/)
+``` swift
+func minFlipsMonoIncr(_ S: String) -> Int {
+    var f0 = 0
+    var f1 = 0
+    let c0 = Character("0").asciiValue!
+    var index = S.startIndex
+    while index != S.endIndex {
+        let n = Int(S[index].asciiValue! - c0)
+        f0 += n
+        f1 = min(f0, f1 + 1 - n)
+        index = S.index(after: index)
+    }
+    return f1
+}
+```
+
 [900. RLE Iterator](https://leetcode.com/problems/rle-iterator/)
 ``` swift
 class RLEIterator {
