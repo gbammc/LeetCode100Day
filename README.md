@@ -1,3 +1,50 @@
+[714. Best Time to Buy and Sell Stock with Transaction Fee](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
+``` swift
+func maxProfit(_ prices: [Int], _ fee: Int) -> Int {
+    guard prices.count > 1 else { return 0 }
+    
+    var buyStatus = [Int](repeating: 0, count: prices.count)
+    var sellStatus = [Int](repeating: 0, count: prices.count)
+    buyStatus[0] = -prices[0]
+    for i in 1 ..< prices.count {
+        buyStatus[i] = max(buyStatus[i - 1], sellStatus[i - 1] - prices[i])
+        sellStatus[i] = max(sellStatus[i - 1], buyStatus[i - 1] + prices[i] - fee)
+    }
+    
+    return sellStatus[prices.count - 1]
+}
+```
+
+[1035. Uncrossed Lines](https://leetcode.com/problems/uncrossed-lines/)
+``` swift
+func maxUncrossedLines(_ A: [Int], _ B: [Int]) -> Int {
+    var dp = [[Int]](repeating: [Int](repeating: 0, count: B.count + 1), count: A.count + 1)
+    for i in 1 ... A.count {
+        for j in 1 ... B.count {
+            dp[i][j] = A[i - 1] == B[j - 1] ? dp[i - 1][j - 1] + 1 : max(dp[i][j - 1], dp[i - 1][j])
+        }
+    }
+    return dp[A.count][B.count]
+}
+```
+
+[1277. Count Square Submatrices with All Ones](https://leetcode.com/problems/count-square-submatrices-with-all-ones/submissions/)
+``` swift
+func countSquares(_ matrix: [[Int]]) -> Int {
+    var res = 0
+    // dp[i][j] means the biggest square with A[i][j] as bottom-right corner.
+    var matrix = matrix
+    for i in 0 ..< matrix.count {
+        for j in 0 ..< matrix[0].count {
+            if matrix[i][j] == 1 && i > 0 && j > 0 {
+                matrix[i][j] += min(matrix[i - 1][j], min(matrix[i][j - 1], matrix[i - 1][j - 1]))
+            }
+            res += matrix[i][j]
+        }
+    }
+    return res
+}
+```
 [926. Flip String to Monotone Increasing](https://leetcode.com/problems/flip-string-to-monotone-increasing/)
 ``` swift
 func minFlipsMonoIncr(_ S: String) -> Int {
