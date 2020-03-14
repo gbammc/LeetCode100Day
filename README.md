@@ -1,5 +1,77 @@
+[4. Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/)
+``` swift
+// 首先我们先设定 i，j 把 A，B 各分成左右两部分，同时我们设定 m(len(A)) < n(len(B))
+// 那么需要满足：
+// 1、j = (m + n + 1) / 2 - i
+// 2、B[j - 1] <= A[i]，A[i - 1] <= B[j]
+// 这里使用二分搜索法，寻找在 [0, m] 范围内，满足条件的 i 值
+// 搜索的过程中会遇到 3 种情况：
+// 1、(j == 0 || i == m || B[j - 1] <= A[i]) && (i == 0 || j == n || A[i - 1] <= B[j])
+//    满足条件，停止搜索
+// 2、j > 0 && i < m && B[j - 1] > A[i]
+//    i 太小
+// 3、i > 0 && j < n && A[i - 1] > B[j]
+//    i 太大
+func findMedianSortedArrays(_ nums1: [Int], _ nums2: [Int]) -> Double {
+    var A = nums1
+    var B = nums2
+    if A.count > B.count {
+        (A, B) = (B, A)
+    }
+    let m = A.count
+    let n = B.count
+    let halfLen = (m + n + 1) / 2
+    var imin = 0
+    var imax = m
+    while imin <= imax {
+        let i = (imin + imax) / 2
+        let j = halfLen - i
+        if i < imax && B[j - 1] > A[i] {
+            imin = i + 1
+        } else if i > imin && A[i - 1] > B[j] {
+            imax = i - 1
+        } else {
+            var maxLeft = 0
+            if i == 0 {
+                maxLeft = B[j - 1]
+            } else if j == 0 {
+                maxLeft = A[i - 1]
+            } else {
+                maxLeft = max(A[i - 1], B[j - 1])
+            }
+            
+            if (m + n) % 2 == 1 {
+                return Double(maxLeft)
+            }
+            
+            var minRight = 0
+            if i == m {
+                minRight = B[j]
+            } else if j == n {
+                minRight = A[i]
+            } else {
+                minRight = min(A[i], B[j])
+            }
+            
+            return Double(minRight + maxLeft) / 2
+        }
+    }
+    return 0
+}
+```
+
 [1014. Best Sightseeing Pair](https://leetcode.com/problems/best-sightseeing-pair/)
 ``` swift
+func maxScoreSightseeingPair(_ A: [Int]) -> Int {
+    var maxS = A[0] - 1
+    var res = 0
+    for i in 1 ..< A.count {
+        res = max(res, maxS + A[i])
+        maxS = max(maxS, A[i])
+        maxS -= 1
+    }
+    return res
+}
 ```
 
 [714. Best Time to Buy and Sell Stock with Transaction Fee](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
