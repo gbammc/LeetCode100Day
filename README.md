@@ -1,6 +1,6 @@
 [10. Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/)
 ``` swift
-// 这里可以用动态规划解决，
+// 这里可以用动态规划解决，
 // 除去“*”号的话，要匹配的其实就只是：s[i] == p[j] || p[i] == '.'，
 // 而包含“*”的模式，那么我们可以选择忽略这个模式（对应 0 个该字符），后者用下一个字符去匹配（对应 1 或多个该字符），
 // 具体实现方式也有两种：Bottom-Up 和 Top-Down 
