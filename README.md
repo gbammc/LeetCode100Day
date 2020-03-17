@@ -1,3 +1,62 @@
+[10. Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/)
+``` swift
+// 这里可以用动态规划解决，
+// 除去“*”号的话，要匹配的其实就只是：s[i] == p[j] || p[i] == '.'，
+// 而包含“*”的模式，那么我们可以选择忽略这个模式（对应 0 个该字符），后者用下一个字符去匹配（对应 1 或多个该字符），
+// 具体实现方式也有两种：Bottom-Up 和 Top-Down 
+//
+// Bottom-Up
+func isMatch(_ s: String, _ p: String) -> Bool {
+    let dot = Character(".")
+    let star = Character("*")
+    let s = Array(s)
+    let p = Array(p)
+    var dp = [[Bool]](repeating: [Bool](repeating: false, count: p.count + 1), count: s.count + 1)
+    dp[s.count][p.count] = true
+
+    for i in stride(from: s.count, to: -1, by: -1) {
+        for j in stride(from: p.count - 1, to: -1, by: -1) {
+            let prefixMatch = (i < s.count && (p[j] == s[i] || p[j] == dot))
+            if j + 1 < p.count && p[j + 1] == star {
+                dp[i][j] = dp[i][j + 2] || (prefixMatch && dp[i + 1][j]) // 如果下一个是"*"号，那么我们可以忽略当前这个模式，后者用下一个字符去匹配
+            } else {
+                dp[i][j] = prefixMatch && dp[i + 1][j + 1]
+            }
+        }
+    }
+
+    return dp[0][0]
+}
+
+// Top-Down
+var memo: [[Bool?]]?
+func isMatch(_ s: String, _ p: String) -> Bool {
+    memo = [[Bool?]](repeating: [Bool?](repeating: nil, count: p.count + 1), count: s.count + 1)
+    return dp(0, j: 0, s: Array(s), p: Array(p))
+}
+
+func dp(_ i: Int, j: Int, s: [Character], p: [Character]) -> Bool {
+    if let res = memo?[i][j] {
+        return res
+    }
+    
+    var ans = false
+    if j == p.count {
+        ans = i == s.count
+    } else {
+        let prefixMatch = (i < s.count && (s[i] == p[j] || p[j] == Character(".")))
+        if j + 1 < p.count && p[j + 1] == Character("*") {
+            ans = dp(i, j: j + 2, s: s, p: p) || (prefixMatch && dp(i + 1, j: j, s: s, p: p))
+        } else {
+            ans = prefixMatch && dp(i + 1, j: j + 1, s: s, p: p)
+        }
+    }
+    
+    memo![i][j] = ans
+    return ans
+}
+```
+
 [4. Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/)
 ``` swift
 // 首先我们先设定 i，j 把 A，B 各分成左右两部分，同时我们设定 m(len(A)) < n(len(B))
