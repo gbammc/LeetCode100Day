@@ -1,3 +1,48 @@
+[23. Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/)
+``` swift
+// 通过分治的方式，两两进行排序合并
+func mergeKLists(_ lists: [ListNode?]) -> ListNode? {
+    guard lists.count > 0 else { return nil }
+
+    let count = lists.count
+    var l = lists
+    var interval = 1
+    while interval < count {
+        var i = 0
+        while i < count - interval {
+            l[i] = merge2Lists(l[i], l[i + interval])
+            i += interval * 2
+        }
+        interval *= 2
+    }
+
+    return lists[0]
+}
+
+func merge2Lists(_ left: ListNode?, _ right: ListNode?) -> ListNode? {
+    var l = left
+    var r = right
+    let head: ListNode? = ListNode(0)
+    var p = head
+    while let lv = l?.val, let rv = r?.val {
+        if lv <= rv {
+            p?.next = l
+            l = l?.next
+        } else {
+            p?.next = r
+            r = r?.next
+        }
+        p = p?.next
+    }
+    if l != nil {
+        p?.next = l
+    }
+    if r != nil {
+        p?.next = r
+    }
+    return head?.next
+}
+```
 [10. Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/)
 ``` swift
 // 这里可以用动态规划解决，
