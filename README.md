@@ -1,3 +1,40 @@
+[25. Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group/)
+``` swift
+func reverseKGroup(_ head: ListNode?, _ k: Int) -> ListNode? {
+    // 对 k 个进行分组
+    var tmp = head
+    var i = 1
+    while tmp != nil && i < k {
+        tmp = tmp?.next
+        i += 1
+    }
+    if tmp == nil {
+        return head
+    }
+    
+    // 断开
+    let rest = tmp?.next
+    tmp?.next = nil
+    
+    // 逆转
+    let newHead = reverse(head)
+    // 递归处理下一部分
+    let nextPart = reverseKGroup(rest, k)
+    // 重新连接
+    head?.next = nextPart
+    
+    return newHead
+}
+
+func reverse(_ head: ListNode?) -> ListNode? {
+    guard head?.next != nil else { return head }
+    let newHead = reverse(head?.next)
+    head?.next?.next = head
+    head?.next = nil
+    return newHead
+}
+```
+
 [23. Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/)
 ``` swift
 // 通过分治的方式，两两进行排序合并
