@@ -1,3 +1,58 @@
+[32. Longest Valid Parentheses]()
+``` swift
+// 使用 DP 的解法
+func longestValidParentheses(_ s: String) -> Int {
+    guard s.count > 1 else { return 0 }
+    
+    let s = Array(s)
+    let n = s.count
+    let left = Character("(")
+    let right = Character(")")
+    var dp = [Int](repeating: 0, count: n)
+    var longest = 0
+    for i in 1 ..< n {
+        let last = i - dp[i - 1] - 1
+        if s[i] == right && last >= 0 && s[last] == left {
+            let previous = i - dp[i - 1] - 2
+            dp[i] = dp[i - 1] + 2 + (previous >= 0 ? dp[previous] : 0)
+            longest = max(longest, dp[i])
+        }
+    }
+    
+    return longest
+}
+
+// 使用栈的解法
+func longestValidParentheses(_ s: String) -> Int {
+    var stack = [Int]()
+    let left = Character("(")
+    let s = Array(s)
+    for (idx, c) in s.enumerated() {
+        if c == left {
+            stack.append(idx)
+        } else {
+            if let last = stack.last, s[last] == left {
+                stack.removeLast()
+            } else {
+                stack.append(idx)
+            }
+        }
+    }
+    if stack.count == 0 {
+        return s.count
+    }
+
+    var longest = 0
+    var n = s.count
+    while stack.count != 0 {
+        let b = stack.last!
+        stack.removeLast()
+        longest = max(longest, n - b - 1)
+        n = b
+    }
+    return max(longest, n)
+}
+```
 [25. Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group/)
 ``` swift
 func reverseKGroup(_ head: ListNode?, _ k: Int) -> ListNode? {
