@@ -1,4 +1,25 @@
-[32. Longest Valid Parentheses]()
+[41. First Missing Positive](https://leetcode.com/problems/first-missing-positive/)
+``` swift
+// 用查表的思路，把数放到对应位置：5 => nums[4]
+func firstMissingPositive(_ nums: [Int]) -> Int {
+    var nums = nums
+    var n = nums.count
+
+    for i in 0 ..< n {
+        while nums[i] > 0 && nums[i] < n && nums[i] != nums[nums[i] - 1] {
+            (nums[i], nums[nums[i] - 1]) = (nums[nums[i] - 1], nums[i])
+        }
+    }
+
+    for i in 0 ..< n where nums[i] != i + 1 {
+        return i + 1
+    }
+
+    return n + 1
+}
+```
+
+[32. Longest Valid Parentheses](https://leetcode.com/problems/longest-valid-parentheses/)
 ``` swift
 // 使用 DP 的解法
 func longestValidParentheses(_ s: String) -> Int {
@@ -53,6 +74,7 @@ func longestValidParentheses(_ s: String) -> Int {
     return max(longest, n)
 }
 ```
+
 [25. Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group/)
 ``` swift
 func reverseKGroup(_ head: ListNode?, _ k: Int) -> ListNode? {
