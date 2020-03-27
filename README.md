@@ -1,3 +1,60 @@
+[44. Wildcard Matching](https://leetcode.com/problems/wildcard-matching/)
+``` swift
+// DP 做法
+var memo: [[Bool?]]?
+
+func isMatch(_ s: String, _ p: String) -> Bool {
+    memo = [[Bool?]](repeating: [Bool?](repeating: nil, count: p.count + 1), count: s.count + 1)
+    let res = dp(0, 0, Array(s), Array(p))
+    return res
+}
+
+func dp(_ i: Int, _ j: Int, _ s: [Character], _ p: [Character]) -> Bool {
+    if let ans = memo?[i][j] {
+        return ans
+    }
+       
+    var ans = false
+    if j == p.count {
+        ans = i == s.count
+    } else {
+        if i < s.count && (s[i] == p[j] || p[j] == Character("?")) {
+            ans = dp(i + 1, j + 1, s, p)
+        } else if p[j] == Character("*") {
+            if i < s.count {
+                ans =  dp(i, j + 1, s, p) /* 匹配 0 个 */ 
+                    || dp(i + 1, j + 1, s, p) /* 匹配 1 个 */ 
+                    || dp(i + 1, j, s, p) /* 匹配多个 */
+            } else {
+                ans = dp(i, j + 1, s, p)
+            }
+        }
+    }
+    memo?[i][j] = ans
+    return ans
+}
+```
+
+[45. Jump Game II](https://leetcode.com/problems/jump-game-ii/)
+``` swift
+// BFS
+func jump(_ nums: [Int]) -> Int {
+    guard nums.count > 0 else { return 0 }
+    
+    var jump = 0
+    var end = 0
+    var maxDist = 0
+    for i in 0 ..< nums.count - 1 {
+        maxDist = max(maxDist, nums[i] + i)
+        if i == end {
+            jump += 1
+            end = maxDist
+        }
+    }
+    return jump
+}
+```
+
 [41. First Missing Positive](https://leetcode.com/problems/first-missing-positive/)
 ``` swift
 // 用查表的思路，把数放到对应位置：5 => nums[4]
