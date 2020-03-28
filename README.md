@@ -1,3 +1,109 @@
+[44. Wildcard Matching](https://leetcode.com/problems/wildcard-matching/)
+``` swift
+// O(n) 解法
+func isMatch(_ s: String, _ p: String) -> Bool {
+    let s = Array(s)
+    let p = Array(p)
+    var i = 0
+    var j = 0
+    var start = -1
+    var match = 0
+    while i < s.count {
+        //advancing both pointers when (both characters match) or ('?' found in pattern)
+        //note that *p will not advance beyond its length
+        if j < p.count && (s[i] == p[j] || p[j] == Character("?")) {
+            i += 1
+            j += 1
+        }
+        // * found in pattern, track index of *, only advancing pattern pointer
+        else if j < p.count && p[j] == Character("*") {
+            start = j
+            match = i
+            j += 1
+        }
+        //current characters didn't match, last pattern pointer was *, current pattern pointer is not *
+        //only advancing pattern pointer
+        else if start != -1 {
+            j = start + 1
+            match += 1
+            i = match
+        }
+        //current pattern pointer is not star, last patter pointer was not *
+        //characters do not match
+        else {
+            return false
+        }
+    }
+    
+    //check for remaining characters in pattern
+    while j < p.count && p[j] == Character("*") {
+        j += 1
+    }
+    
+    return j == p.count
+}
+
+// DP 的 bottom up 解法
+func isMatch(_ s: String, _ p: String) -> Bool {
+    let s = Array(s)
+    let p = Array(p)
+    var dp = [[Bool]](repeating: [Bool](repeating: false, count: p.count + 1), count: s.count + 1)
+    
+    dp[s.count][p.count] = true
+    
+    for j in stride(from: p.count - 1, to: -1, by: -1) {
+        if p[j] == Character("*") {
+            dp[s.count][j] = true
+        } else {
+            break
+        }
+    }
+    
+    for i in stride(from: s.count - 1, to: -1, by: -1) {
+        for j in stride(from: p.count - 1, to: -1, by: -1) {
+            if s[i] == p[j] || p[j] == Character("?") {
+                dp[i][j] = dp[i + 1][j + 1]
+            } else if p[j] == Character("*") {
+                dp[i][j] = dp[i + 1][j] /* 匹配 0 个 */ || dp[i][j + 1] /* 匹配多个 */
+            }
+        }
+    }
+    
+    return dp[0][0]
+}
+
+// 普通 DP 解法
+var memo: [[Bool?]]?
+func isMatch(_ s: String, _ p: String) -> Bool {
+    memo = [[Bool?]](repeating: [Bool?](repeating: nil, count: p.count + 1), count: s.count + 1)
+    let res = dp(0, 0, Array(s), Array(p))
+    return res
+}
+func dp(_ i: Int, _ j: Int, _ s: [Character], _ p: [Character]) -> Bool {
+    if let ans = memo?[i][j] {
+        return ans
+    }
+       
+    var ans = false
+    if j == p.count {
+        ans = i == s.count
+    } else {
+        if i < s.count && (s[i] == p[j] || p[j] == Character("?")) {
+            ans = dp(i + 1, j + 1, s, p)
+        } else if p[j] == Character("*") {
+            if i < s.count {
+                ans =  dp(i, j + 1, s, p) /* 匹配 0 个 */
+                    || dp(i + 1, j, s, p) /* 匹配多个 */
+            } else {
+                ans = dp(i, j + 1, s, p)
+            }
+        }
+    }
+    memo?[i][j] = ans
+    return ans
+}
+```
+
 [42. Trapping Rain Water](https://leetcode.com/problems/trapping-rain-water/)
 ``` swift
 // 双向指针解法
@@ -160,7 +266,7 @@ func longestValidParentheses(_ s: String) -> Int {
         if c == left {
             stack.append(idx)
         } else {
-            if let last = stack.last, s[last] == left {
+            if let last = stack.last, s[last] == left { // 找到匹配，从栈中去除
                 stack.removeLast()
             } else {
                 stack.append(idx)
