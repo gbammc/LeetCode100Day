@@ -1,3 +1,54 @@
+[42. Trapping Rain Water](https://leetcode.com/problems/trapping-rain-water/)
+``` swift
+// 双向指针解法
+// 类似于把水向中间逼近
+func trap(_ height: [Int]) -> Int {
+    var res = 0
+    var left = 0
+    var right = height.count - 1
+    var maxLeft = 0
+    var maxRight = 0
+    while left <= right {
+        if height[left] <= height[right] {
+            if height[left] > maxLeft {
+                maxLeft = height[left]
+            } else {
+                res += maxLeft - height[left]
+            }
+            left += 1
+        } else {
+            if height[right] > maxRight {
+                maxRight = height[right]
+            } else {
+                res += maxRight - height[right]
+            }
+            right -= 1
+        }
+    }
+    
+    return res
+}
+
+// 栈解法
+func trap(_ height: [Int]) -> Int {
+    var res = 0
+    var stack = [Int]()
+    var i = 0
+    while i < height.count {
+        if stack.count == 0 || height[i] <= height[stack.last!] { // 保留下降的 index
+            stack.append(i)
+            i += 1
+        } else {
+            let pre = stack.removeLast() // 当前位置最低
+            if stack.count > 0 { // 处理 edge case
+                let minHeight = min(height[i], height[stack.last!])
+                res += (minHeight - height[pre]) * (i - stack.last! - 1) // 左右 index 的差即为当前区间水量
+            }
+        }
+    }
+    return res
+}
+```
 [44. Wildcard Matching](https://leetcode.com/problems/wildcard-matching/)
 ``` swift
 // DP 做法
