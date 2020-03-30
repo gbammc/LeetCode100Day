@@ -1,3 +1,40 @@
+[72. Edit Distance](https://leetcode.com/problems/edit-distance/)
+``` swift
+// DP
+func minDistance(_ word1: String, _ word2: String) -> Int {
+    guard word1.count > 0 && word2.count > 0 else { return max(word1.count, word2.count) }
+
+    var word1 = Array(word1)
+    var word2 = Array(word2)
+    if word2.count > word1.count {
+        (word2, word1) = (word1, word2)
+    }
+
+    var dp = [Int](repeating: 0, count: word2.count + 1)
+    var old = 0
+    var tmp = 0
+
+    for j in 0 ... word2.count {
+        dp[j] = j
+    }
+
+    for i in 1 ... word1.count {
+        old = i - 1
+        dp[0] = i
+        for j in 1 ... word2.count {
+            tmp = dp[j]
+            if word1[i - 1] == word2[j - 1] {
+                dp[j] = old
+            } else {
+                dp[j] = min(dp[j] + 1, min(dp[j - 1] + 1, old + 1))
+            }
+            old = tmp
+        }
+    }
+
+    return dp[word2.count]
+}
+```
 [57. Insert Interval](https://leetcode.com/problems/insert-interval/)
 ``` swift
 func insert(_ intervals: [[Int]], _ newInterval: [Int]) -> [[Int]] {
