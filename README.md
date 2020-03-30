@@ -1,3 +1,26 @@
+[57. Insert Interval](https://leetcode.com/problems/insert-interval/)
+``` swift
+func insert(_ intervals: [[Int]], _ newInterval: [Int]) -> [[Int]] {
+    var start = [[Int]]()
+    var end = [[Int]]()
+    var midStart = newInterval[0]
+    var midEnd = newInterval[1]
+
+    for i in intervals {
+        if i[1] < midStart {
+            start.append(i)
+        } else if i[0] > midEnd {
+            end.append(i)
+        } else {
+            midStart = min(midStart, i[0])
+            midEnd = max(midEnd, i[1])
+        }
+    }
+
+    return start + [[midStart, midEnd]] + end
+}
+```
+
 [44. Wildcard Matching](https://leetcode.com/problems/wildcard-matching/)
 ``` swift
 // O(n) 解法
