@@ -1,3 +1,49 @@
+[37. Sudoku Solver](https://leetcode.com/problems/sudoku-solver/)
+``` swift
+// 最直观的解法
+func solveSudoku(_ board: inout [[Character]]) {
+    guard board.count > 0 && board[0].count > 0 else { return }
+
+    _ = solve(&board)
+}
+
+func solve(_ board: inout [[Character]]) -> Bool {
+    for i in 0 ..< board.count {
+        for j in 0 ..< board[0].count {
+            if board[i][j] == Character(".") {
+                for k in 1 ... 9 where isValid(board, i, j, Character("\(k)")) {
+                    board[i][j] = Character("\(k)")
+                    if solve(&board) {
+                        return true
+                    }
+                    board[i][j] = Character(".")   
+                }
+                return false
+            }
+        }
+    }
+
+    return true
+}
+
+func isValid(_ board: [[Character]], _ i: Int, _ j: Int, _ k: Character) -> Bool {
+    for q in 0 ..< 9 {
+        if board[i][q] != Character(".") && board[i][q] == k {
+            return false
+        }
+        if board[q][j] != Character(".") && board[q][j] == k {
+            return false
+        }
+        let m = 3 * (i / 3) + q / 3
+        let n = 3 * (j / 3) + q % 3
+        if board[m][n] != Character(".") && board[m][n] == k {
+            return false
+        }
+    }
+    return true
+}
+```
+
 [72. Edit Distance](https://leetcode.com/problems/edit-distance/)
 ``` swift
 // DP
