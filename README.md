@@ -1,6 +1,60 @@
+[30. Substring with Concatenation of All Words](https://leetcode.com/problems/substring-with-concatenation-of-all-words/)
+``` swift
+func findSubstring(_ s: String, _ words: [String]) -> [Int] {
+    guard s.count > 0
+        && words.count > 0
+        && words[0].count > 0
+        && s.count >= words.count * words[0].count else {
+            return []
+    }
+    
+    // 通过哈希表去除排序问题
+    let dict: [String: Int] = words.reduce(into: [:]) { $0[$1] = $0[$1, default: 0] + 1 }
+    let size = words[0].count
+    let length = words.count * size
+    var res = [Int]()
+    let chars = Array(s)
+    
+    for i in 0 ..< size {
+        var start = i
+        
+        while start + length <= s.count {
+            var copy = [String: Int]()
+            var end = start + length
+            var matches = 0
+            
+            while end > start {
+                // swift 的 substring 太慢，用数组替代
+                let word = String(chars[end - size ..< end])
+                end -= size
+                
+                let count = copy[word, default: 0] + 1
+                if count > dict[word] ?? 0 {
+                    break
+                }
+                
+                matches += 1
+                copy[word] = count
+            }
+            
+            // 利用滑动窗口，减少运行时间
+            if matches == words.count {
+                res.append(start)
+                start += size
+            } else {
+                start = max(end + size, start + size)
+            }
+        }
+    }
+    
+    return res
+}
+```
+
 [37. Sudoku Solver](https://leetcode.com/problems/sudoku-solver/)
 ``` swift
-// 最直观的解法
+// 回溯
+// 时间复杂度：O(n^3)
 func solveSudoku(_ board: inout [[Character]]) {
     guard board.count > 0 && board[0].count > 0 else { return }
 
