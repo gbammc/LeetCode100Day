@@ -1,3 +1,73 @@
+[51. N-Queens](https://leetcode.com/problems/n-queens/)
+``` swift
+func solveNQueens(_ n: Int) -> [[String]] {
+    var positions = [Int]() // 记录每行 Q 的位置
+    var res = [[Int]]()
+    solve(&positions, &res, n)
+    return translateToBoard(res, n)
+}
+
+func solve(_ positions: inout [Int], _ res: inout [[Int]], _ n: Int) {
+    // 已经算到最后一行，满足条件，保存
+    if n == positions.count {
+        let copy = positions
+        res.append(copy)
+        return
+    }
+    
+    for j in 0 ..< n where isValid(positions, j) {
+        positions.append(j)
+        solve(&positions, &res, n)
+        positions.removeLast()
+    }
+}
+
+func isValid(_ pos: [Int], _ col: Int) -> Bool {
+    guard pos.count > 0 else { return true }
+    
+    for i in 0 ..< pos.count {
+        // 上方
+        if pos[i] == col {
+            return false
+        }
+        // 右上方
+        if pos[i] == col + pos.count - i {
+            return false
+        }
+        // 左上方
+        if pos[i] == col - pos.count + i {
+            return false
+        }
+    }
+    
+    return true
+}
+
+func translateToBoard(_ res: [[Int]], _ n: Int) -> [[String]] {
+    var boards = [[String]]()
+    for pos in res {
+        var chars = [[Character]](repeating: [Character](repeating: ".", count: n), count: n)
+        for (i, p) in pos.enumerated() {
+            chars[i][p] = Character("Q")
+        }
+        boards.append(chars.map{ String($0) })
+    }
+    return boards
+}
+```
+
+[136. Single Number](https://leetcode.com/problems/single-number/)
+``` swift
+// 通过异或消除重复数
+func singleNumber(_ nums: [Int]) -> Int {
+    var n = 0
+    for i in nums {
+        n ^= i
+    }
+    return n
+}
+```
+
 [30. Substring with Concatenation of All Words](https://leetcode.com/problems/substring-with-concatenation-of-all-words/)
 ``` swift
 func findSubstring(_ s: String, _ words: [String]) -> [Int] {
