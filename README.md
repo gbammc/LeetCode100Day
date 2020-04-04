@@ -1,3 +1,34 @@
+[145. Binary Tree Postorder Traversal](https://leetcode.com/problems/binary-tree-postorder-traversal/)
+``` swift
+// 迭代法遍历
+// 时间复杂度：O(n)
+func postorderTraversal(_ root: TreeNode?) -> [Int] {
+    var res = [Int]()
+    var stack = [TreeNode]()
+    var cur = root
+    var pre: TreeNode?
+    
+    while cur != nil || stack.count > 0 {
+        while cur != nil {
+            stack.append(cur!)
+            cur = cur?.left
+        }
+        
+        cur = stack.last
+        if cur?.right == nil || cur?.right === pre {
+            stack.removeLast()
+            res.append(cur!.val)
+            pre = cur
+            cur = nil
+        } else {
+            cur = cur?.right
+        }
+    }
+    
+    return res
+}
+```
+
 [65. Valid Number](https://leetcode.com/problems/valid-number/)
 ``` swift
 // 用状态机逐个处理
@@ -63,6 +94,15 @@ func isNumber(_ s: String) -> Bool {
     }
     
     return state == 2 || state == 3 || state == 5 || state == 8
+}
+
+// 正则解法
+func isNumber(_ s: String) -> Bool {
+    let s = s.trimmingCharacters(in: .whitespaces)
+    if let res = s.range(of: "[-+]?(\\d+\\.?|\\.\\d+)\\d*(e[-+]?\\d+)?", options: .regularExpression) {
+        return s[res] == s
+    }
+    return false
 }
 ```
 [51. N-Queens](https://leetcode.com/problems/n-queens/)
