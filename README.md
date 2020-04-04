@@ -1,5 +1,73 @@
+[65. Valid Number](https://leetcode.com/problems/valid-number/)
+``` swift
+// 用状态机逐个处理
+// 时间复杂度：O(n)
+func isNumber(_ s: String) -> Bool {
+    let s = Array(s.trimmingCharacters(in: .whitespaces))
+    var state = 0
+    for c in s {
+        if c == Character("+") || c == Character("-") {
+            switch state {
+            case 0:
+                state = 1
+            case 4:
+                state = 6
+            default:
+                state = -1
+                break
+            }
+        } else if c.isWholeNumber {
+            switch state {
+            case 0: fallthrough
+            case 1: fallthrough
+            case 2:
+                state = 2
+            case 3:
+                state = 3
+            case 4: fallthrough
+            case 5: fallthrough
+            case 6:
+                state = 5
+            case 7: fallthrough
+            case 8:
+                state = 8
+            default:
+                state = -1
+                break
+            }
+        } else if c == Character(".") {
+            switch state {
+            case 0: fallthrough
+            case 1:
+                state = 7
+            case 2:
+                state = 3
+            default:
+                state = -1
+                break
+            }
+        } else if c == Character("e") {
+            switch state {
+            case 2: fallthrough
+            case 3: fallthrough
+            case 8:
+                state = 4
+            default:
+                state = -1
+                break
+            }
+        } else {
+            state = -1
+            break
+        }
+    }
+    
+    return state == 2 || state == 3 || state == 5 || state == 8
+}
+```
 [51. N-Queens](https://leetcode.com/problems/n-queens/)
 ``` swift
+// 时间复杂度：O(n^2)
 func solveNQueens(_ n: Int) -> [[String]] {
     var positions = [Int]() // 记录每行 Q 的位置
     var res = [[Int]]()
@@ -59,6 +127,7 @@ func translateToBoard(_ res: [[Int]], _ n: Int) -> [[String]] {
 [136. Single Number](https://leetcode.com/problems/single-number/)
 ``` swift
 // 通过异或消除重复数
+// 时间复杂度：O(n)
 func singleNumber(_ nums: [Int]) -> Int {
     var n = 0
     for i in nums {
