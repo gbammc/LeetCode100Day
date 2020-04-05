@@ -1,3 +1,122 @@
+[154. Find Minimum in Rotated Sorted Array II](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array-ii)
+``` swift
+// 递归解法
+// 时间复杂度：O(n)
+func findMin(_ nums: [Int]) -> Int {
+    guard nums.count > 1 else { return nums.first ?? -1 }
+    return find(nums, 0, nums.count - 1)
+}
+
+func find(_ nums: [Int], _ i: Int, _ j: Int) -> Int {
+    if nums[i] < nums[j] {
+        return nums[i]
+    }
+    
+    if i == j {
+        return nums[i]
+    }
+    
+    let m = i + (j - i) / 2
+    
+    if nums[m] > nums[m + 1] {
+        return nums[m + 1]
+    }
+    
+    if nums[i] == nums[j] {
+        return min(find(nums, i, m), find(nums, m + 1, j))
+    }
+    
+    // m > j，那么最小值在右边
+    if nums[m] > nums[j] {
+        return find(nums, m + 1, j)
+    }
+    
+    // 否则左边
+    return find(nums, i, m)
+}
+
+// 迭代法
+func findMin(_ nums: [Int]) -> Int {
+    var l = 0
+    var r = nums.count - 1
+            
+    while l <= r {
+        let m = l + (r - l) / 2
+        if nums[m] > nums[r] {
+            l = m + 1
+        } else if nums[m] < nums[r] {
+            r = m
+        } else {
+            if r - 1 > 0 && nums[r - 1] > nums[r] { // 为了找出 pivot 的 index
+                l = r
+                break
+            }
+            r -= 1 // 遇到重复，逐步缩小右边
+        }
+    }
+    
+    return nums[l]
+}
+```
+[283. Move Zeroes](https://leetcode.com/problems/move-zeroes/)
+``` swift
+// 双指针法
+// 时间复杂度：O(logn)
+func moveZeroes(_ nums: inout [Int]) {
+    var slow = 0
+    for i in 0 ..< nums.count {
+        if nums[i] != 0 {
+            nums.swapAt(slow, i)
+            slow += 1
+        }
+    }
+}
+```
+
+[153. Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/)
+``` swift
+// 二分搜索
+// 时间复杂度：O(logn)
+func findMin(_ nums: [Int]) -> Int {
+    var l = 0
+    var r = nums.count - 1
+    
+    guard nums[l] > nums[r] else { return nums[l] }
+    
+    while l <= r {
+        let m = l + (r - l) / 2
+        if nums[m] > nums[l] && nums[m] > nums[r] {
+            l = m
+        } else if nums[l] > nums[m] {
+            r = m
+        } else {
+            break
+        }
+    }
+    
+    return nums[r]
+}
+
+// 简化版本
+func findMin(_ nums: [Int]) -> Int {
+    var l = 0
+    var r = nums.count - 1
+    
+    guard nums[l] > nums[r] else { return nums[l] }
+    
+    while l + 1 < r {
+        let m = l + (r - l) / 2
+        if nums[m] > nums[l] {
+            l = m
+        } else {
+            r = m
+        }
+    }
+    
+    return nums[r]
+}
+```
+
 [145. Binary Tree Postorder Traversal](https://leetcode.com/problems/binary-tree-postorder-traversal/)
 ``` swift
 // 迭代法遍历
@@ -9,12 +128,15 @@ func postorderTraversal(_ root: TreeNode?) -> [Int] {
     var pre: TreeNode?
     
     while cur != nil || stack.count > 0 {
+        // 递归遍历左节点
         while cur != nil {
             stack.append(cur!)
             cur = cur?.left
         }
         
+        // 已经访问到最左节点
         cur = stack.last
+        // 不存在右节点或右节点已经访问过时，访问跟节点
         if cur?.right == nil || cur?.right === pre {
             stack.removeLast()
             res.append(cur!.val)
