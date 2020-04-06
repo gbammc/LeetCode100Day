@@ -1,3 +1,65 @@
+[68. Text Justification](https://leetcode.com/problems/text-justification/)
+``` swift
+// 解法不难，需要注意的是细节
+// 时间复杂度：O(n)
+func fullJustify(_ words: [String], _ maxWidth: Int) -> [String] {
+    var res = [String]()
+    var curLength = 0
+    var wordLength = 0
+    var line = [String]()
+    for w in words {
+        if (curLength + w.count + (curLength > 0 ? 1 : 0)) <= maxWidth {
+            line.append(w)
+            wordLength += w.count
+            curLength += w.count + (curLength > 0 ? 1 : 0)
+        } else {
+            let spaces = maxWidth - wordLength
+            var space = maxWidth - curLength
+            var extra = 0
+            if line.count > 1 {
+                space = spaces / (line.count - 1)
+                extra = spaces % (line.count - 1)
+            }
+            
+            var l = ""
+            for i in 0 ..< line.count {
+                l += line[i]
+                if i != line.count - 1 {
+                    l += String(repeating: " ", count: space)
+                    if extra > 0 {
+                        l += " "
+                        extra -= 1
+                    }
+                }                
+            }
+            if l.count < maxWidth {
+                l += String(repeating: " ", count: maxWidth - l.count)
+            }
+            res.append(l)
+            
+            line = [w]
+            wordLength = w.count
+            curLength = w.count
+        }
+    }
+    if line.count > 0 {
+        var l = ""
+        for i in 0 ..< line.count {
+            l += line[i]
+            if i != line.count - 1 {
+                l += " "
+            }
+        }
+        if l.count < maxWidth {
+            l += String(repeating: " ", count: maxWidth - l.count)
+        }
+        res.append(l)
+    }
+    
+    return res
+}
+```
+
 [154. Find Minimum in Rotated Sorted Array II](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array-ii)
 ``` swift
 // 递归解法
