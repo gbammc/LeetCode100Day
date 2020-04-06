@@ -1,3 +1,46 @@
+[76. Minimum Window Substring]()
+``` swift
+// 双指针法
+// 时间复杂度：O(n)
+func minWindow(_ s: String, _ t: String) -> String {
+    let s = Array(s)
+    let t = Array(t) // Swift 处理字符串实在太慢了，不先转为数组一定会超时
+    var dict = t.reduce(into: [:]) { $0[$1] = $0[$1, default: 0] + 1 }
+    var minCount = s.count + 1
+    var minLeft = 0
+    var left = 0
+    var matches = 0
+    
+    for (i, c) in s.enumerated() { // 用 enumerated 会比 while 方式更慢
+        if let count = dict[c] {
+            dict[c] = count - 1 // 可以为负数，表示已超出的重复个数
+            if count > 0 {
+                matches += 1
+            }
+            
+            while matches == t.count {
+                if i - left + 1 < minCount {
+                    minCount = i - left + 1
+                    minLeft = left
+                }
+                if let count = dict[s[left]] {
+                    dict[s[left]] = count + 1
+                    if count >= 0 {
+                        matches -= 1 // 已排除掉超出的重复个数，因此减一
+                    }
+                }
+                left += 1 // 不断左移
+            }
+        }
+    }
+    
+    if minCount > s.count {
+        return ""
+    }
+    return String(s[minLeft ..< minLeft + minCount])
+}
+```
+
 [68. Text Justification](https://leetcode.com/problems/text-justification/)
 ``` swift
 // 解法不难，需要注意的是细节
@@ -54,6 +97,39 @@ func fullJustify(_ words: [String], _ maxWidth: Int) -> [String] {
             l += String(repeating: " ", count: maxWidth - l.count)
         }
         res.append(l)
+    }
+    
+    return res
+}
+// 简化版
+func fullJustify(_ words: [String], _ maxWidth: Int) -> [String] {
+    var res = [String]()
+    var wordLength = 0
+    var line = [String]()
+    for w in words {
+        if wordLength + w.count + line.count > maxWidth {
+            for i in 0 ..< maxWidth - wordLength {
+                if line.count == 1 {
+                    line[0] += " "
+                } else {
+                    // 通过 Round Robin 法添加空格
+                    line[i % (line.count - 1)] += " "
+                }
+            }
+            
+            res.append(line.joined())
+            line = [String]()
+            wordLength = 0
+        }
+        
+        line.append(w)
+        wordLength += w.count
+    }
+    
+    if line.count > 0 {
+        var last = line.joined(separator: " ")
+        last += String(repeating: " ", count: maxWidth - last.count)
+        res.append(last)
     }
     
     return res
@@ -120,6 +196,7 @@ func findMin(_ nums: [Int]) -> Int {
     return nums[l]
 }
 ```
+
 [283. Move Zeroes](https://leetcode.com/problems/move-zeroes/)
 ``` swift
 // 双指针法
@@ -1122,7 +1199,7 @@ class RLEIterator {
 ```
 
 [48. Rotate Image](https://leetcode.com/problems/rotate-image/)
-```swift
+``` swift
 func rotate(_ matrix: inout [[Int]]) {
     let count = matrix.count
     for i in 0 ..< count / 2 {
@@ -1445,7 +1522,7 @@ func equalSubstring(_ s: String, _ t: String, _ maxCost: Int) -> Int {
 ```
 
 [1260. Shift 2D Grid](https://leetcode.com/contest/weekly-contest-163/problems/shift-2d-grid/)
-```swift
+``` swift
 func shiftGrid(_ grid: [[Int]], _ k: Int) -> [[Int]] {
     let n = grid.count
     let m = grid.first!.count
