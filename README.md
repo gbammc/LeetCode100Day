@@ -1,3 +1,53 @@
+[85. Maximal Rectangle](https://leetcode.com/problems/maximal-rectangle/)
+``` swift
+// 解法和 Largest Rectangle in Histogram 一样
+// 时间复杂度：O(n^2)
+func maximalRectangle(_ matrix: [[Character]]) -> Int {
+    guard matrix.count > 0 && matrix[0].count > 0 else { return 0 }
+    var res = 0
+    let row = matrix.count
+    let col = matrix[0].count
+    var heights = [Int](repeating: 0, count: col + 1)
+    for i in 0 ..< row {
+        var stack = [Int]()
+        for j in 0 ..< heights.count {
+            if j < col && matrix[i][j] == "1" {
+                heights[j] += 1
+            } else {
+                heights[j] = 0
+            }
+            
+            while stack.count > 0 && heights[j] < heights[stack.last!] {
+                let h = stack.removeLast()
+                let pre = stack.count > 0 ? stack.last! : -1
+                res = max((j - pre - 1) * heights[h], res)
+            }
+            stack.append(j)
+        }
+    }
+    return res
+}
+```
+
+[49. Group Anagrams](https://leetcode.com/problems/group-anagrams/)
+``` swift
+// 关键是构造 key 的效率上，例如采用：hash += UInt64(pow(5.0, Double(value)))
+// 时间复杂度：O(n)
+func groupAnagrams(_ strs: [String]) -> [[String]] {
+    let strs = strs.map { Array($0) }
+    var dict = [String: [String]]()
+    for chars in strs {
+            let key = String(chars.sorted())
+        if let _ = dict[key] {
+            dict[key]?.append(String(chars))
+        } else {
+            dict[key] = [String(chars)]
+        }
+    }
+    return dict.values.map{ $0 }
+}
+```
+
 [Counting Elements](https://leetcode.com/explore/challenge/card/30-day-leetcoding-challenge/528/week-1/3289/)
 ``` swift
 // 时间复杂度：O(n)
