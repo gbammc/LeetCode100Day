@@ -1,4 +1,43 @@
-[76. Minimum Window Substring]()
+[Counting Elements](https://leetcode.com/explore/challenge/card/30-day-leetcoding-challenge/528/week-1/3289/)
+``` swift
+// 时间复杂度：O(n)
+func countElements(_ arr: [Int]) -> Int {
+    var res = 0
+    let dict = arr.reduce(into: [:]) { $0[$1] = $0[$1, default: 0] + 1 }
+    for k in dict.keys where dict[k - 1] != nil {
+        res += dict[k - 1]!
+    }
+    return res
+}
+```
+
+[84. Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/)
+``` swift
+// 栈法
+// 时间复杂度：O(n)
+func largestRectangleArea(_ heights: [Int]) -> Int {
+    var res = 0
+    var i = 0
+    var stack = [Int]()
+    var heights = heights
+    heights.append(0) // 关键
+    
+    while i < heights.count {
+        while stack.count > 0 && heights[i] < heights[stack.last!] {
+            let h = stack.removeLast()
+            let pre = stack.count > 0 ? stack.last! : -1
+            res = max((i - pre - 1) * heights[h], res)
+        }
+        
+        stack.append(i)
+        i += 1
+    }
+    
+    return res
+}
+```
+
+[76. Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/)
 ``` swift
 // 双指针法
 // 时间复杂度：O(n)
