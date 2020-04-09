@@ -1,3 +1,35 @@
+[99. Recover Binary Search Tree](https://leetcode.com/problems/recover-binary-search-tree/)
+``` swift
+// 通过中序遍历，找出不正确的两个节点，具体可能有以下两种情况：
+// 1、两个连着的：.. < .. < .. A > B .. < ..
+// 2、两个不连着：.. < A > X .. < Y > B .. < ..
+// 解决方法是找到 A 跟 B，然后交换
+// 时间复杂度：O(n)
+func recoverTree(_ root: TreeNode?) {
+    var cur = root
+    var pre = TreeNode(Int.min)
+    var pairs = [(TreeNode, TreeNode)]()
+    var stack = [TreeNode]()
+    while cur != nil || stack.count > 0 {
+        while cur != nil {
+            stack.append(cur!)
+            cur = cur?.left
+        }
+        cur = stack.removeLast()
+        if let val = cur?.val, val < pre.val {
+            pairs.append((pre, cur!))
+        }
+        pre = cur!
+        cur = cur?.right
+    }
+    if pairs.count == 1 {
+        (pairs[0].0.val, pairs[0].1.val) = (pairs[0].1.val, pairs[0].0.val)
+    } else if pairs.count == 2 {
+        (pairs[0].0.val, pairs[1].1.val) = (pairs[1].1.val, pairs[0].0.val)
+    }
+}
+```
+
 [85. Maximal Rectangle](https://leetcode.com/problems/maximal-rectangle/)
 ``` swift
 // 解法和 Largest Rectangle in Histogram 一样
