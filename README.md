@@ -1,3 +1,27 @@
+[525. Contiguous Array](https://leetcode.com/submissions/detail/324573139/)
+``` swift
+// 核心思路是一个值 count 标记当前遇到“1”和“0”的情况，
+// 除了等于 0 外，当 count 再次和以前的值相等时，说明遇到了相同个数的“1”和“0”
+// 这里用哈希表去记录，key 为 count 的值，value 为该值第一次出现时在 nums 的索引
+// 时间复杂度：O(n)
+func findMaxLength(_ nums: [Int]) -> Int {
+    var res = 0
+    var dict = [0: -1]
+    var count = 0
+    
+    for (i, n) in nums.enumerated() {
+        count += (n == 1 ? 1 : -1)
+        if let v = dict[count] {
+            res = max(res, i - v)
+        } else {
+            dict[count] = i
+        }
+    }
+    
+    return res
+}
+```
+
 [99. Recover Binary Search Tree](https://leetcode.com/problems/recover-binary-search-tree/)
 ``` swift
 // 通过中序遍历，找出不正确的两个节点，具体可能有以下两种情况：
