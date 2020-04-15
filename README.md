@@ -1,3 +1,19 @@
+[Perform String Shifts](https://leetcode.com/explore/challenge/card/30-day-leetcoding-challenge/529/week-2/3299/)
+``` swift
+// 因为左移和右移的操作可以相互抵消，所以只需要算出最后移动的方向和大小就可以了
+// 时间复杂度：O(n)
+func stringShift(_ s: String, _ shift: [[Int]]) -> String {
+    let chars = Array(s)
+    let change = shift.reduce(into: 0) { $0 += ($1[0] == 0 ? 1 : -1) * $1[1] } % s.count
+    if change > 0 {
+        return String(chars[change ..< s.count]) + chars[0 ..< change]
+    } else if change < 0 {
+        return String(chars[s.count + change ..< s.count]) + chars[0 ..< s.count + change]
+    }
+    return s
+}
+```
+
 [525. Contiguous Array](https://leetcode.com/submissions/detail/324573139/)
 ``` swift
 // 核心思路是一个值 count 标记当前遇到“1”和“0”的情况，
