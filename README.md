@@ -1,3 +1,22 @@
+[678. Valid Parenthesis String](https://leetcode.com/problems/valid-parenthesis-string/)
+``` swift
+// lo 和 hi 分别记录当前左括号可能的最少或最多个数
+// 时间复杂度：O(n)
+func checkValidString(_ s: String) -> Bool {
+    var lo = 0
+    var hi = 0
+    for c in s {
+        lo += c == Character("(") ? 1 : -1
+        hi += c != Character(")") ? 1 : -1
+        if hi < 0 {
+            break
+        }
+        lo = max(lo, 0)
+    }
+    return lo == 0
+}
+```
+
 [Perform String Shifts](https://leetcode.com/explore/challenge/card/30-day-leetcoding-challenge/529/week-2/3299/)
 ``` swift
 // 因为左移和右移的操作可以相互抵消，所以只需要算出最后移动的方向和大小就可以了
