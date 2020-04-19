@@ -1,3 +1,85 @@
+[33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/)
+``` swift
+func search(_ nums: [Int], _ target: Int) -> Int {
+    var l = 0
+    var h = nums.count - 1
+    while l <= h {
+        let mid = l + (h - l) / 2
+        if nums[mid] == target {
+            return mid
+        } else if nums[mid] > nums[h] {
+            if target > nums[mid] || target <= nums[h] {
+                l = mid + 1
+            } else {
+                h = mid - 1
+            }
+        } else {
+            if nums[mid] < target && target <= nums[h] {
+                l = mid + 1
+            } else {
+                h = mid - 1
+            }
+        }
+    }
+    return -1
+}
+```
+[64. Minimum Path Sum](https://leetcode.com/problems/minimum-path-sum/)
+``` swift
+// DP
+// 时间复杂度：O(m * n)
+func minPathSum(_ grid: [[Int]]) -> Int {
+    guard grid.count > 0 && grid[0].count > 0 else { return 0 }
+    
+    let row = grid.count
+    let column = grid[0].count
+    var dp = grid[0]
+    for j in 1 ..< column {
+        dp[j] = dp[j - 1] + grid[0][j]
+    }
+    for i in 1 ..< row {
+        dp[0] = dp[0] + grid[i][0]
+        for j in 1 ..< column {
+            dp[j] = min(dp[j], dp[j - 1]) + grid[i][j]
+        }
+    }
+
+    return dp[column - 1]
+}
+```
+
+[200. Number of Islands](https://leetcode.com/problems/number-of-islands/)
+``` swift
+// DFS
+// 时间复杂度：O(n)
+func numIslands(_ grid: [[Character]]) -> Int {
+    var grid = grid
+    var res = 0
+    for i in 0 ..< grid.count {
+        for j in 0 ..< grid[0].count where grid[i][j] == Character("1") {
+            dfs(&grid, i, j)
+            res += 1
+        }
+    }
+    return res
+}
+
+func dfs(_ grid: inout [[Character]], _ i: Int, _ j: Int) {
+    if i < 0
+        || j < 0
+        || i >= grid.count
+        || j >= grid[0].count
+        || grid[i][j] != Character("1") {
+        return
+    }
+    grid[i][j] = Character("0")
+    dfs(&grid, i, j + 1)
+    dfs(&grid, i, j - 1)
+    dfs(&grid, i + 1, j)
+    dfs(&grid, i - 1, j)
+}
+```
+
 [678. Valid Parenthesis String](https://leetcode.com/problems/valid-parenthesis-string/)
 ``` swift
 // lo 和 hi 分别记录当前左括号可能的最少或最多个数
