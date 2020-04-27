@@ -1,3 +1,24 @@
+[1143. Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/)
+``` swift
+// DP
+// 时间复杂度：O(m * n)
+func longestCommonSubsequence(_ text1: String, _ text2: String) -> Int {
+    let s = Array(text1)
+    let t = Array(text2)
+    var dp = [[Int]](repeating: [Int](repeating: 0, count: t.count + 1), count: s.count + 1)
+    for i in 1 ... s.count {
+        for j in 1 ... t.count {
+            if s[i - 1] == t[j - 1] {
+                dp[i][j] = dp[i - 1][j - 1] + 1
+            } else {
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+            }
+        }
+    }
+    return dp[s.count][t.count]
+}
+```
+
 [33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/)
 ``` swift
 func search(_ nums: [Int], _ target: Int) -> Int {
@@ -24,6 +45,7 @@ func search(_ nums: [Int], _ target: Int) -> Int {
     return -1
 }
 ```
+
 [64. Minimum Path Sum](https://leetcode.com/problems/minimum-path-sum/)
 ``` swift
 // DP
