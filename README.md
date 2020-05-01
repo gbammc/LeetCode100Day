@@ -1,3 +1,84 @@
+[124. Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/)
+``` swift
+// DFS
+// 时间复杂度：O(n)
+func maxPathSum(_ root: TreeNode?) -> Int {
+    var res = Int.min
+    dfs(root, &res)
+    return res
+}
+
+func dfs(_ root: TreeNode?, _ res: inout Int) -> Int {
+    guard let root = root else { return 0 }
+    
+    let left = dfs(root.left, &res)
+    let right = dfs(root.right, &res)
+    let ret = max(root.val, max(root.val + left, root.val + right))
+    
+    res = max(res, max(max(root.val, ret), root.val + left + right))
+    
+    return ret
+}
+```
+
+[Maximal Square](https://leetcode.com/problems/maximal-square/)
+``` swift
+// DP
+// 时间复杂度：O(m * n)
+func maximalSquare(_ matrix: [[Character]]) -> Int {
+    guard matrix.count > 0 && matrix[0].count > 0 else { return 0 }
+    
+    let m = matrix.count
+    let n = matrix[0].count
+    var res = 0
+    var last = 0
+    var dp = [Int](repeating: 0, count: n)
+    
+    for (i, c) in matrix[0].enumerated() where c == Character("1") {
+        dp[i] = 1
+        res = 1
+    }
+    
+    for i in 1 ..< m {
+        last = dp[0]
+        dp[0] = matrix[i][0] == Character("1") ? 1 : 0
+        res = max(res, dp[0])
+        for j in 1 ..< n {
+            let tmp = dp[j]
+            if matrix[i][j] == Character("1") {
+                dp[j] = min(min(last, tmp), dp[j - 1]) + 1
+                res = max(res, dp[j])
+            } else {
+                dp[j] = 0
+            }
+            last = tmp
+        }
+    }
+    return res * res
+}
+```
+
+[Check If a String Is a Valid Sequence from Root to Leaves Path in a Binary Tree](https://leetcode.com/explore/challenge/card/30-day-leetcoding-challenge/532/week-5/3315/)
+``` swift
+// DP
+// 时间复杂度：O(n)
+func isValidSequence(_ root: TreeNode?, _ arr: [Int]) -> Bool {
+    return check(root, arr: arr, index: 0)
+}
+
+func check(_ root: TreeNode?, arr: [Int], index: Int) -> Bool {
+    // 终止条件
+    guard let root = root, index < arr.count, root.val == arr[index] else { return false }
+    
+    if index == arr.count - 1 && root.left == nil && root.right == nil {
+        return true
+    }
+
+    // 本次递归所需的任务
+    return check(root.left, arr: arr, index: index + 1) || check(root.right, arr: arr, index: index + 1)
+}
+```
+
 [1143. Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/)
 ``` swift
 // DP
