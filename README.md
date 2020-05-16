@@ -1,3 +1,50 @@
+[918. Maximum Sum Circular Subarray](https://leetcode.com/problems/maximum-sum-circular-subarray/)
+``` swift
+// Kadane 算法
+// 时间复杂度：O(logn)
+// 空间复杂度：O(1)
+//
+// 这里有两种情况：
+// 1、最大子序列在中间
+// 2、最大子序列在两端
+//
+// 第一种情况可以用 Kadane 算法 直接求出，至于第二情况，我们可以通过原始序列之和减去最小子序列求出
+func maxSubarraySumCircular(_ A: [Int]) -> Int {
+    var total = 0
+    var maxSum = -30000
+    var curMax = 0
+    var minSum = 30000
+    var curMin = 0
+    for n in A {
+        curMax = max(n, curMax + n)
+        maxSum = max(maxSum, curMax)
+        curMin = min(n, curMin + n)
+        minSum = min(minSum, curMin)
+        total += n
+    }
+    return maxSum > 0 ? (max(maxSum, total - minSum)) : maxSum
+}
+```
+
+[First Bad Version](https://leetcode.com/explore/challenge/card/may-leetcoding-challenge/534/week-1-may-1st-may-7th/3316/)
+``` swift
+// 二分
+// 时间复杂度：O(logn)
+func firstBadVersion(_ n: Int) -> Int {
+    var l = 0
+    var r = n
+    while l < r {
+        let mid = l + (r - l) / 2
+        if !isBadVersion(mid) {
+            l = mid + 1
+        } else {
+            r = mid
+        }
+    }
+    return l
+}
+```
+
 [124. Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/)
 ``` swift
 // DFS
