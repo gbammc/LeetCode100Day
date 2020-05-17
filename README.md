@@ -1,3 +1,28 @@
+[328. Odd Even Linked List](https://leetcode.com/problems/odd-even-linked-list/)
+``` swift
+func oddEvenList(_ head: ListNode?) -> ListNode? {
+    let odd = head
+    var oddTail = odd
+    let even = head?.next
+    var evenTail = even
+    var isOdd = true
+    var cur = even?.next
+    while cur != nil  {
+        if isOdd {
+            oddTail?.next = cur
+            oddTail = cur
+        } else {
+            evenTail?.next = cur
+            evenTail = cur
+        }
+        isOdd = !isOdd
+        cur = cur?.next
+    }
+    evenTail?.next = nil
+    oddTail?.next = even
+    return odd
+}
+```
 [918. Maximum Sum Circular Subarray](https://leetcode.com/problems/maximum-sum-circular-subarray/)
 ``` swift
 // Kadane 算法
