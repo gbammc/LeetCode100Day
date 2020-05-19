@@ -1,3 +1,52 @@
+[567. Permutation in String](https://leetcode.com/problems/permutation-in-string/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func checkInclusion(_ s1: String, _ s2: String) -> Bool {
+    guard s1.count <= s2.count else { return false }
+
+    let s1 = s1.map { $0.asciiValue! - Character("a").asciiValue! }
+    let s2 = s2.map { $0.asciiValue! - Character("a").asciiValue! }
+    var dict = [Int](repeating: 0, count: 26)
+
+    // start 和 end 记录窗口大小
+    var start = 0
+    var end = 0
+
+    // 利用数组记录模式串各字符出现的次数
+    for c in s1 {
+        dict[Int(c)] += 1
+    }
+
+    var tmp: UInt8 = 0
+    while end < s2.count {
+        tmp = s2[end]
+
+        // end 指向的字符在模式串内，减少对应字符的记录，并移动 end
+        if dict[Int(tmp)] > 0 {
+            dict[Int(tmp)] -= 1
+            end += 1
+
+            // 窗口的大小和模式串一致，匹配成功
+            if end - start == s1.count {
+                return true
+            }
+        // 窗口为 0 时，同时移动 start 和 end
+        } else if start == end {
+            start += 1
+            end += 1
+        // 否则移动 start，回收已匹配字符的记录
+        } else {
+            tmp = s2[start]
+            dict[Int(tmp)] += 1
+            start += 1
+        }
+    }
+
+    return false
+}
+```
+
 [328. Odd Even Linked List](https://leetcode.com/problems/odd-even-linked-list/)
 ``` swift
 func oddEvenList(_ head: ListNode?) -> ListNode? {
@@ -23,6 +72,7 @@ func oddEvenList(_ head: ListNode?) -> ListNode? {
     return odd
 }
 ```
+
 [918. Maximum Sum Circular Subarray](https://leetcode.com/problems/maximum-sum-circular-subarray/)
 ``` swift
 // Kadane 算法
