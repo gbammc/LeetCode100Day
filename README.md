@@ -1,3 +1,24 @@
+[901. Online Stock Span](https://leetcode.com/problems/online-stock-span/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+// 通过维护一个递减的栈来实现
+class StockSpanner {
+    
+    var stack = [(Int, Int)]()
+
+    func next(_ price: Int) -> Int {
+        var w = 1
+        while !stack.isEmpty && price >= stack.last!.0 {
+            let last = stack.removeLast()
+            w += last.1
+        }
+        stack.append((price, w))
+        return w
+    }
+}
+```
+
 [567. Permutation in String](https://leetcode.com/problems/permutation-in-string/)
 ``` swift
 // 时间复杂度：O(n)
