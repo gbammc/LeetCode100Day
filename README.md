@@ -1,8 +1,53 @@
+[230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/)
+``` swift
+// 循环中序遍历
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func kthSmallest(_ root: TreeNode?, _ k: Int) -> Int {
+    var stack = [TreeNode]()
+    var count = k
+    var cur = root
+    while true {
+        while let node = cur {
+            stack.append(node)
+            cur = node.left
+        }
+        cur = stack.removeLast()
+        count -= 1
+        if count == 0 {
+            return cur!.val
+        }
+        cur = cur?.right
+    }
+    return 0
+}
+
+// 递归中序遍历
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func kthSmallest(_ root: TreeNode?, _ k: Int) -> Int {
+    var res = 0
+    var count = 0
+    func inorder(_ root: TreeNode?) {
+        guard let root = root else { return }
+        inorder(root.left)
+        count += 1
+        if count == k {
+            res = root.val
+            return
+        }
+        inorder(root.right)
+    }
+    inorder(root)
+    return res
+}
+```
+
 [901. Online Stock Span](https://leetcode.com/problems/online-stock-span/)
 ``` swift
+// 通过维护一个递减的栈来实现，利用 weight 字段来记录被 pop 出去的数的个数
 // 时间复杂度：O(n)
 // 空间复杂度：O(n)
-// 通过维护一个递减的栈来实现
 class StockSpanner {
     
     var stack = [(Int, Int)]()
