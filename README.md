@@ -1,3 +1,30 @@
+[986. Interval List Intersections](https://leetcode.com/problems/interval-list-intersections/)
+``` swift
+// 时间复杂度：O(m + n)
+// 空间复杂度：O(1)
+func intervalIntersection(_ A: [[Int]], _ B: [[Int]]) -> [[Int]] {
+    var res = [[Int]]()
+    var i = 0
+    var j = 0
+    while i < A.count && j < B.count {
+        let sa = A[i][0]
+        let ea = A[i][1]
+        let sb = B[j][0]
+        let eb = B[j][1]
+
+        if sa <= eb && sb <= ea { // 只需要满足该条件即可
+            res.append([max(sa, sb), min(ea, eb)])
+        }
+        if eb > ea {
+            i += 1
+        } else {
+            j += 1
+        }
+    }
+    return res
+}
+```
+
 [230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/)
 ``` swift
 // 循环中序遍历
