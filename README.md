@@ -1,3 +1,39 @@
+[207. Course Schedule](https://leetcode.com/problems/course-schedule/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func canFinish(_ numCourses: Int, _ prerequisites: [[Int]]) -> Bool {
+    var numCourses = numCourses
+    var adj = [[Int]](repeating: [Int](), count: numCourses)
+    var degree = [Int](repeating: 0, count: numCourses)
+    // 初始化邻接表和入度数组
+    for p in prerequisites {
+        adj[p[1]].append(p[0])
+        degree[p[0]] += 1
+    }
+    // BFS 求拓扑排序
+    // 把所有入度为0顶点加入队列
+    var queue = [Int]()
+    for i in 0 ..< numCourses where degree[i] == 0 {
+        queue.append(i)
+    }
+    // 直到队列为空
+    while !queue.isEmpty {
+        // 取出第一个顶点
+        let cur = queue.removeFirst()
+        numCourses -= 1
+        // 依次对邻接点的入度减一
+        for next in adj[cur] {
+            degree[next] -= 1
+            // 如果入度为0则加入队列
+            if degree[next] == 0 {
+                queue.append(next)
+            }
+        }
+    }
+    return numCourses == 0
+}
+```
 [986. Interval List Intersections](https://leetcode.com/problems/interval-list-intersections/)
 ``` swift
 // 时间复杂度：O(m + n)
