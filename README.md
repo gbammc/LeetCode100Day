@@ -1,3 +1,27 @@
+[226. Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func invertTree(_ root: TreeNode?) -> TreeNode? {
+    var stack = [root]
+    while !stack.isEmpty {
+        if let cur = stack.removeLast() {
+            (cur.left, cur.right) = (cur.right, cur.left)
+            stack.append(cur.left)
+            stack.append(cur.right)
+        }
+    }
+    return root
+}
+
+func invertTree(_ root: TreeNode?) -> TreeNode? {
+    guard let root = root else { return nil }
+    (root.left, root.right) = (root.right, root.left)
+    invertTree(root.left)
+    invertTree(root.right)
+    return root
+}
+```
 [207. Course Schedule](https://leetcode.com/problems/course-schedule/)
 ``` swift
 // 时间复杂度：O(n)
@@ -34,6 +58,7 @@ func canFinish(_ numCourses: Int, _ prerequisites: [[Int]]) -> Bool {
     return numCourses == 0
 }
 ```
+
 [986. Interval List Intersections](https://leetcode.com/problems/interval-list-intersections/)
 ``` swift
 // 时间复杂度：O(m + n)
