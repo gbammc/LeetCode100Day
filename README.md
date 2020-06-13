@@ -1,3 +1,67 @@
+[380. Insert Delete GetRandom O(1)](https://leetcode.com/problems/insert-delete-getrandom-o1/)
+``` swift
+class RandomizedSet {
+
+    var queue = [Int]()
+    var dict = [Int: Int]()
+
+    /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+    func insert(_ val: Int) -> Bool {
+        guard dict[val] == nil else {
+            return false
+        }
+
+        queue.append(val)
+        dict[val] = queue.count - 1
+
+        return true
+    }
+
+    /** Removes a value from the set. Returns true if the set contained the specified element. */
+    func remove(_ val: Int) -> Bool {
+        guard let idx = dict[val] else {
+            return false
+        }
+
+        // 把最后一个值跟目标值替换
+        let last = queue.last!
+        queue[idx] = last
+        dict[last] = idx
+        dict[val] = nil
+        queue.removeLast()
+
+        return true
+    }
+
+    /** Get a random element from the set. */
+    func getRandom() -> Int {
+        guard !queue.isEmpty else {
+            return -1
+        }
+        return queue[Int.random(in: 0 ..< queue.count)]
+    }
+}
+```
+
+[518. Coin Change 2](https://leetcode.com/problems/coin-change-2/)
+``` swift
+// 时间复杂度：O(m * n)
+// 空间复杂度：O(n)
+func change(_ amount: Int, _ coins: [Int]) -> Int {
+    var dp = [Int](repeating: 0, count: amount + 1)
+    dp[0] = 1
+    for i in coins {
+        for j in 1 ..< amount + 1 {
+            if j >= i {
+                dp[j] += dp[j - i]
+            }
+        }
+    }
+
+    return dp[amount]
+}
+```
+
 [226. Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/)
 ``` swift
 // 时间复杂度：O(n)
