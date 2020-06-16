@@ -1,3 +1,62 @@
+[787. Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/)
+``` swift
+// DP
+// 时间复杂度：O(m *n)
+// 空间复杂度：O(m * n)
+func findCheapestPrice(_ n: Int, _ flights: [[Int]], _ src: Int, _ dst: Int, _ K: Int) -> Int {
+    var dp = [[Int]](repeating: [Int](repeating: Int.max, count: n), count: K + 2)
+    for i in 0 ... K + 1 {
+        dp[i][src] = 0
+    }
+    for i in 1 ... K + 1 {
+        for f in flights {
+            let s = f[0]
+            let e = f[1]
+            let w = f[2]
+            if dp[i - 1][s] != Int.max {
+                dp[i][e] = min(dp[i][e], dp[i - 1][s] + w)
+            }
+        }
+    }
+    return dp[K + 1][dst] == Int.max ? -1 : dp[K + 1][dst]
+}
+```
+
+[368. Largest Divisible Subset](https://leetcode.com/problems/largest-divisible-subset/)
+``` swift
+// DP
+// 时间复杂度：O(n ^ 2)
+// 空间复杂度：O(n)
+func largestDivisibleSubset(_ nums: [Int]) -> [Int] {
+    let nums = nums.sorted()
+    var count = [Int](repeating: 0, count: nums.count)
+    var pre = [Int](repeating: 0, count: nums.count)
+    var max = 0
+    var idx = -1
+    for i in 0 ..< nums.count {
+        count[i] = 1
+        pre[i] = -1
+        for j in stride(from: i - 1, to: -1, by: -1) {
+            if nums[i] % nums[j] == 0 && 1 + count[j] > count[i] {
+                count[i] = count[j] + 1
+                pre[i] = j
+            }
+        }
+        if count[i] > max {
+            max = count[i]
+            idx = i
+        }
+    }
+
+    var res = [Int]()
+    while idx != -1 {
+        res.append(nums[idx])
+        idx = pre[idx]
+    }
+    return res
+}
+```
+
 [380. Insert Delete GetRandom O(1)](https://leetcode.com/problems/insert-delete-getrandom-o1/)
 ``` swift
 class RandomizedSet {
