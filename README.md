@@ -1,7 +1,31 @@
+[60. Permutation Sequence](https://leetcode.com/problems/permutation-sequence/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func getPermutation(_ n: Int, _ k: Int) -> String {
+    var nums = Array(1 ... n)
+    var res = ""
+    var k = k
+
+    while nums.count > 1 {
+        let times = Array(1 ..< nums.count).reduce(1, *)
+        let i = (k - 1) / times
+        k -= i * times
+        res += "\(nums.remove(at: i))"
+    }
+
+    for t in nums {
+        res += "\(t)"
+    }
+
+    return res
+}
+```
+
 [130. Surrounded Regions](https://leetcode.com/problems/surrounded-regions/)
 ``` swift
 // DFS，逆向思维，把四边不符合要求的格子先标出来，最后统一处理
-// 时间复杂度：O(m *n)
+// 时间复杂度：O(m * n)
 // 空间复杂度：O(m * n)
 func solve(_ board: inout [[Character]]) {
     guard board.count > 0 else { return }
