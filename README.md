@@ -1,3 +1,56 @@
+[130. Surrounded Regions](https://leetcode.com/problems/surrounded-regions/)
+``` swift
+// DFS，逆向思维，把四边不符合要求的格子先标出来，最后统一处理
+// 时间复杂度：O(m *n)
+// 空间复杂度：O(m * n)
+func solve(_ board: inout [[Character]]) {
+    guard board.count > 0 else { return }
+
+    func dfs(_ board: inout [[Character]], _ i: Int, _ j: Int) {
+        if i < 0 || j < 0 || i >= board.count || j >= board[0].count || board[i][j] != Character("O") {
+            return
+        }
+        board[i][j] = Character("1")
+        dfs(&board, i + 1, j)
+        dfs(&board, i - 1, j)
+        dfs(&board, i, j + 1)
+        dfs(&board, i, j - 1)
+    }
+
+    let row = board.count
+    let column = board[0].count
+
+    // 上下两边
+    for j in 0 ..< column {
+        if board[0][j] == Character("O") {
+            dfs(&board, 0, j)
+        }
+        if board[row - 1][j] == Character("O") {
+            dfs(&board, row - 1, j)
+        }
+    }
+    // 左右两边
+    for i in 0 ..< row {
+        if board[i][0] == Character("O") {
+            dfs(&board, i, 0)
+        }
+        if board[i][column - 1] == Character("O") {
+            dfs(&board, i, column - 1)
+        }
+    }
+
+    for i in 0 ..< row {
+        for j in 0 ..< column {
+            if board[i][j] == Character("O") {
+                board[i][j] = Character("X")
+            } else if board[i][j] == Character("1") {
+                board[i][j] = Character("O")
+            }
+        }
+    }
+}
+```
+
 [787. Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/)
 ``` swift
 // DP
