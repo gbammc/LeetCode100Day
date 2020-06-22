@@ -1,3 +1,29 @@
+[174. Dungeon Game](https://leetcode.com/problems/dungeon-game/)
+``` swift
+// DP
+// 时间复杂度：O(n * m)
+// 空间复杂度：O(n * m)
+func calculateMinimumHP(_ dungeon: [[Int]]) -> Int {
+    guard dungeon.count > 0 else { return 0 }
+
+    let row = dungeon.count
+    let col = dungeon[0].count
+
+    var dp = [[Int]](repeating: [Int](repeating: Int.max / 2, count: col + 1), count: row + 1)
+    dp[row - 1][col] = 1
+    dp[row][col - 1] = 1
+
+    for i in stride(from: row - 1, to: -1, by: -1) {
+        for j in stride(from: col - 1, to: -1, by: -1) {
+            let right = max(dp[i][j + 1] - dungeon[i][j], 1)
+            let down = max(dp[i + 1][j] - dungeon[i][j], 1)
+            dp[i][j] = min(right, down)
+        }
+    }
+    return dp[0][0]
+}
+```
+
 [60. Permutation Sequence](https://leetcode.com/problems/permutation-sequence/)
 ``` swift
 // 时间复杂度：O(n)
