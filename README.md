@@ -1,3 +1,23 @@
+[279. Perfect Squares](https://leetcode.com/problems/perfect-squares/)
+``` swift
+// DP
+// 时间复杂度：O(n * n)
+// 空间复杂度：O(n)
+func numSquares(_ n: Int) -> Int {
+    var dp = [Int](repeating: 0, count: n + 1)
+    for j in 1 ... n {
+        var k = Int.max
+        var i = 1
+        while i * i <= j {
+            k = min(k, dp[j - i * i] + 1)
+            i += 1
+        }
+        dp[j] = k
+    }
+    return dp[n]
+}
+```
+
 [174. Dungeon Game](https://leetcode.com/problems/dungeon-game/)
 ``` swift
 // DP
