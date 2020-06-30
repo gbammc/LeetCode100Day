@@ -1,3 +1,51 @@
+[332. Reconstruct Itinerary](https://leetcode.com/problems/reconstruct-itinerary/)
+``` swift
+// Stack 处理 DFS
+// 时间复杂度：O(m * n)
+// 空间复杂度：O(m)
+func findItinerary(_ tickets: [[String]]) -> [String] {
+    var dict = tickets.reduce(into: [String: [String]]()) {
+        var array = $0[$1.first!] ?? [String]()
+        array.append($1.last!)
+        $0[$1.first!] = array
+    }
+    
+    for k in dict.keys {
+        dict[k]?.sort()
+    }
+
+    var res = [String]()
+    var stack = ["JFK"]
+    while stack.count > 0 {
+        let key = stack.last!
+        if dict[key]?.count ?? 0 > 0 {
+            stack.append(dict[key]!.removeFirst())
+        } else {
+            // 这个机场已经不能去任何地方，所以加到行程里
+            res.append(stack.removeLast())
+        }
+
+    }
+    return res.reversed()
+}
+```
+
+[62. Unique Paths](https://leetcode.com/problems/unique-paths/)
+``` swift
+// 时间复杂度：O(m * n)
+// 空间复杂度：O(m)
+func uniquePaths(_ m: Int, _ n: Int) -> Int {
+    var memo = [Int](repeating: 0, count: m)        
+    memo[0] = 1
+    for r in 0 ..< n {
+        for c in 1 ..< m {
+            memo[c] = memo[c] + memo[c - 1]
+        }
+    }
+    return memo[m - 1]
+}
+```
+
 [279. Perfect Squares](https://leetcode.com/problems/perfect-squares/)
 ``` swift
 // DP
