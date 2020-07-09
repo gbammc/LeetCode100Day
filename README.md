@@ -1,3 +1,75 @@
+[15. 3Sum](https://leetcode.com/problems/3sum/)
+``` swift
+// 时间复杂度：O(n * n)
+// 空间复杂度：O(n)
+func threeSum(_ nums: [Int]) -> [[Int]] {
+    guard nums.count > 2 else { return [] }
+
+    let nums = nums.sorted()
+    var res = [[Int]]()
+    for i in 0 ..< nums.count - 2 {
+        if nums[i] > 0 {
+            break
+        }
+        // 在剩余的数组里双向搜索目标
+        if i == 0 || (i > 0 && nums[i] != nums[i - 1]) {
+            var l = i + 1
+            var h = nums.count - 1
+            while l < h {
+                if nums[l] + nums[h] == -nums[i] {
+                    res.append([nums[i], nums[l], nums[h]])
+
+                    // 去重
+                    while l < h && nums[l] == nums[l + 1] {
+                        l += 1
+                    }
+                    while l < h && nums[h] == nums[h - 1] {
+                        h -= 1
+                    }
+                    l += 1
+                    h -= 1
+                } else if nums[l] + nums[h] > -nums[i] {
+                    h -= 1
+                } else {
+                    l += 1
+                }
+            }
+        }
+    }
+
+    return res
+}
+```
+
+[264. Ugly Number II](https://leetcode.com/problems/ugly-number-ii/)
+``` swift
+// DP
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func nthUglyNumber(_ n: Int) -> Int {
+    var res = [Int](repeating: 1, count: n)
+    var k1 = 0, k2 = 0, k3 = 0
+    for i in 1 ..< n {
+        let v1 = res[k1] * 2
+        let v2 = res[k2] * 3
+        let v3 = res[k3] * 5
+        let next = min(v1, min(v2, v3))
+
+        if next == v1 {
+            k1 += 1
+        }
+        if next == v2 {
+            k2 += 1
+        }
+        if next == v3 {
+            k3 += 1
+        }
+        res[i] = next
+    }
+    return res[n - 1]
+}
+```
+
 [332. Reconstruct Itinerary](https://leetcode.com/problems/reconstruct-itinerary/)
 ``` swift
 // Stack 处理 DFS
@@ -21,7 +93,7 @@ func findItinerary(_ tickets: [[String]]) -> [String] {
         if dict[key]?.count ?? 0 > 0 {
             stack.append(dict[key]!.removeFirst())
         } else {
-            // 这个机场已经不能去任何地方，所以加到行程里
+            // 这个机场已经不能去任何地方，所以加到最终行程里
             res.append(stack.removeLast())
         }
 
