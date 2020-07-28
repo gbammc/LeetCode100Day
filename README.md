@@ -1,3 +1,29 @@
+[106. Construct Binary Tree from Inorder and Postorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func buildTree(_ inorder: [Int], _ postorder: [Int]) -> TreeNode? {
+    var index = [Int: Int]()
+    for i in 0 ..< inorder.count {
+        index[inorder[i]] = i
+    }
+
+    var cur = postorder.count - 1
+
+    func build(_ left: Int, _ right: Int) -> TreeNode? {
+        guard left <= right else { return nil }
+        let node = TreeNode(postorder[cur])
+        let idx = index[node.val]!
+        cur -= 1
+        node.right = build(idx + 1, right)
+        node.left = build(left, idx - 1)
+        return node
+    }
+
+    return build(0, cur)
+}
+```
+
 [15. 3Sum](https://leetcode.com/problems/3sum/)
 ``` swift
 // 时间复杂度：O(n * n)
