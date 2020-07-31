@@ -1,3 +1,24 @@
+[309. Best Time to Buy and Sell Stock with Cooldown](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
+``` swift
+// DP,对可能出现的状态转移都进行处理
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func maxProfit(_ prices: [Int]) -> Int {
+    var buy = Int.min
+    var sell = 0
+    var prevBuy = 0
+    var prevSell = 0
+    for p in prices {
+        prevBuy = buy
+        buy = max(prevSell - p, prevBuy)
+        prevSell = sell
+        sell = max(prevBuy + p, sell)
+    }
+
+    return sell
+}
+```
+
 [106. Construct Binary Tree from Inorder and Postorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/)
 ``` swift
 // 时间复杂度：O(n)
