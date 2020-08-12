@@ -1,3 +1,42 @@
+[987. Vertical Order Traversal of a Binary Tree](https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func verticalTraversal(_ root: TreeNode?) -> [[Int]] {
+    guard let root = root else { return [] }
+
+    var dict = [Int: [(Int, Int)]]() // [x: [(val, y)]]
+    var stack = [(root, 0, 0)] // [(node, x, y)]
+    while !stack.isEmpty {
+        let count = stack.count
+        for _ in 0 ..< count {
+            let node = stack.removeFirst()
+
+            dict[node.1, default: []].append((node.0.val, node.2))
+
+            if let left = node.0.left {
+                stack.append((left, node.1 - 1, node.2 - 1))
+            }
+            if let right = node.0.right {
+                stack.append((right, node.1 + 1, node.2 - 1))
+            }
+        }
+    }
+
+    var res = [[Int]]()
+    for k in dict.keys.sorted() {
+        res.append(dict[k]!.sorted(by: { (a, b) -> Bool in
+            if a.1 != b.1 {
+                return a.1 >= b.1
+            } else {
+                return a.0 <= b.0
+            }
+        }).map{ $0.0 })
+    }
+    return res
+}
+```
+
 [309. Best Time to Buy and Sell Stock with Cooldown](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
 ``` swift
 // DP,对可能出现的状态转移都进行处理
