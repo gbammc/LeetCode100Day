@@ -1,3 +1,40 @@
+[1286. Iterator for Combination](https://leetcode.com/problems/iterator-for-combination/)
+``` swift
+// 时间复杂度：O(n * m)
+// 空间复杂度：O(n)
+class CombinationIterator {
+
+    var idx = 0
+    var set = [String]()
+
+    init(_ characters: String, _ combinationLength: Int) {
+        let chars = Array(characters)
+        func iterate(_ c: String, _ i: Int) {
+            if c.count == combinationLength {
+                set.append(String(c))
+                return
+            }
+            for j in i ..< characters.count {
+                iterate(c + "\(chars[j])", j + 1)
+            }
+        }
+
+        iterate("", 0)
+    }
+
+    func next() -> String {
+        let ret = set[idx]
+        idx += 1
+        return ret
+    }
+
+    func hasNext() -> Bool {
+        return idx < set.count
+    }
+    
+}
+```
+
 [987. Vertical Order Traversal of a Binary Tree](https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/)
 ``` swift
 // 时间复杂度：O(n)
