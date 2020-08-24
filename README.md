@@ -1,3 +1,39 @@
+[497. Random Point in Non-overlapping Rectangles](https://leetcode.com/problems/random-point-in-non-overlapping-rectangles/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+class Solution {
+    var map = [Int]()
+    var rects = [[Int]]()
+
+    init(_ rects: [[Int]]) {
+        self.rects = rects
+        var sum = 0
+        for r in rects {
+            // 这里算的不是面积,而是可以选择的点的数量
+            let points = (r[2] - r[0] + 1) * (r[3] - r[1] + 1)
+            sum += points
+            map.append(sum)
+        }
+    }
+
+    func pick() -> [Int] {
+        // 在 [1 ... 总点数] 的范围内先随机选择对应的矩形
+        let r = Int.random(in: 1 ... map.last!)
+        var rect = [Int]()
+        for (i, p) in map.enumerated() where p >= r {
+            rect = rects[i]
+            break
+        }
+        // 最后返回矩形内的点位置
+        return [
+            Int.random(in: rect[0] ... rect[2]),
+            Int.random(in: rect[1] ... rect[3])
+        ]
+    }
+}
+```
+
 [1286. Iterator for Combination](https://leetcode.com/problems/iterator-for-combination/)
 ``` swift
 // 时间复杂度：O(n * m)
