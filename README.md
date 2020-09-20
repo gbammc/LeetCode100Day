@@ -1,3 +1,42 @@
+[Unique Paths III](https://leetcode.com/problems/unique-paths-iii/)
+``` swift
+// 时间复杂度：O(m * n)
+// 空间复杂度：O(m * n)
+func uniquePathsIII(_ grid: [[Int]]) -> Int {
+    var grid = grid
+    var res = 0
+    var start = (0, 0)
+    var count = 0
+    for i in 0 ..< grid.count {
+        for j in 0 ..< grid[0].count {
+            if grid[i][j] == 0 {
+                count += 1
+            } else if grid[i][j] == 1 {
+                start = (i, j)
+            }
+        }
+    }
+
+    func dfs(_ p: Int, _ q: Int, _ step: Int) {
+        guard p >= 0 && p < grid.count && q >= 0 && q < grid[0].count else { return }
+        if step == count + 1 && grid[p][q] == 2 {
+            res += 1
+        } else if grid[p][q] == 0 || grid[p][q] == 1 {
+            grid[p][q] = -1
+            dfs(p + 1, q, step + 1)
+            dfs(p - 1, q, step + 1)
+            dfs(p, q + 1, step + 1)
+            dfs(p, q - 1, step + 1)
+            grid[p][q] = 0
+        }
+    }
+
+    dfs(start.0, start.1, 0)
+
+    return res
+}
+```
+
 [1291. Sequential Digits](https://leetcode.com/problems/sequential-digits/)
 ``` swift
 // 时间复杂度：O(len(hight))
