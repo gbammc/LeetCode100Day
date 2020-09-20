@@ -1,3 +1,64 @@
+[1291. Sequential Digits](https://leetcode.com/problems/sequential-digits/)
+``` swift
+// 时间复杂度：O(len(hight))
+// 空间复杂度：O(n)
+func sequentialDigits(_ low: Int, _ high: Int) -> [Int] {
+    let highLength = String(high).count
+    var res = [Int]()
+    for i in 1 ... 9 {
+        var n = i
+        var c = 1
+        while c < highLength && i + c < 10 {
+            n = n * 10 + i + c
+            c += 1
+
+            if n >= low && n <= high {
+                res.append(n)
+            }
+        }
+    }
+    return res.sorted()
+}
+```
+
+[949. Largest Time for Given Digits](https://leetcode.com/problems/largest-time-for-given-digits/)
+``` swift
+// 时间复杂度：O(1)
+// 空间复杂度：O(1)
+func largestTimeFromDigits(_ A: [Int]) -> String {
+    var minute = -1
+    var hour = -1
+    var digits = A
+
+    func permute(_ i: Int) {
+        if i == 4 {
+            let h = digits[0] * 10 + digits[1]
+            let m = digits[2] * 10 + digits[3]
+            if h <= 23 && m <= 59 && (h > hour || (h == hour && m > minute)) {
+                hour = h
+                minute = m
+            }
+            return
+        }
+
+        for k in i ..< 4 {
+            (digits[i], digits[k]) = (digits[k], digits[i])
+            permute(i + 1)
+            (digits[i], digits[k]) = (digits[k], digits[i])
+        }
+    }
+
+    // 遍历所有组合
+    permute(0)
+
+    if hour > -1 && minute > -1 {
+        return "\(hour / 10)\(hour % 10):\(minute / 10)\(minute % 10)"
+    }
+
+    return ""
+}
+```
+
 [497. Random Point in Non-overlapping Rectangles](https://leetcode.com/problems/random-point-in-non-overlapping-rectangles/)
 ``` swift
 // 时间复杂度：O(n)
