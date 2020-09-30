@@ -1,4 +1,39 @@
-[Unique Paths III](https://leetcode.com/problems/unique-paths-iii/)
+[139. Word Break](https://leetcode.com/problems/word-break/)
+``` swift
+// DP
+// 时间复杂度：O(m * n)
+// 空间复杂度：O(n)
+func wordBreak(_ s: String, _ wordDict: [String]) -> Bool {
+    let wordDict = Set<String>(wordDict)
+    var dp = [Bool](repeating: false, count: s.count + 1)
+    dp[0] = true
+
+    // forward
+//        for i in 1 ... s.count {
+//            for j in 0 ..< i {
+//                let str = s[s.index(s.startIndex, offsetBy: j) ..< s.index(s.startIndex, offsetBy: i)]
+//                if dp[j] && wordDict.contains(String(str)) {
+//                    dp[i] = true
+//                }
+//            }
+//        }
+
+    // backward
+    for i in 1 ... s.count {
+        let suffix = s.suffix(i)
+        print(suffix)
+        for w in wordDict {
+            if i >= w.count, dp[i - w.count], suffix.hasPrefix(w) {
+                dp[i] = true
+            }
+        }
+    }
+
+    return dp.last!
+}
+```
+
+[980. Unique Paths III](https://leetcode.com/problems/unique-paths-iii/)
 ``` swift
 // 时间复杂度：O(m * n)
 // 空间复杂度：O(m * n)
