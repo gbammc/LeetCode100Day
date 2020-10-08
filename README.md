@@ -1,3 +1,36 @@
+[61. Rotate List](https://leetcode.com/problems/rotate-list/)
+``` swift
+// 双指针
+// 时间复杂度：O(n)
+func rotateRight(_ head: ListNode?, _ k: Int) -> ListNode? {
+    guard head != nil && k > 0 else { return head }
+
+    var fast = head
+    var slow = head
+    var count = 0
+    while true {
+        if count == k {
+            break
+        } else if fast?.next != nil {
+            fast = fast?.next
+            count += 1
+        } else {
+            return rotateRight(head, k % (count + 1))
+        }
+    }
+
+    while fast?.next != nil {
+        fast = fast?.next
+        slow = slow?.next
+    }
+
+    let newHead = slow?.next
+    slow?.next = nil
+    fast?.next = head
+    return newHead
+}
+```
+
 [139. Word Break](https://leetcode.com/problems/word-break/)
 ``` swift
 // DP
@@ -21,7 +54,6 @@ func wordBreak(_ s: String, _ wordDict: [String]) -> Bool {
     // backward
     for i in 1 ... s.count {
         let suffix = s.suffix(i)
-        print(suffix)
         for w in wordDict {
             if i >= w.count, dp[i - w.count], suffix.hasPrefix(w) {
                 dp[i] = true
