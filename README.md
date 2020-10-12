@@ -1,3 +1,35 @@
+[316. Remove Duplicate Letters](https://leetcode.com/problems/remove-duplicate-letters/)
+``` swift
+// DP
+// 时间复杂度：O(n^2)
+// 空间复杂度：O(n)
+func removeDuplicateLetters(_ s: String) -> String {
+    let s = Array(s)
+    var lastIdx = [Int](repeating: 0, count: 26)
+    let base = Int(Character("a").asciiValue!)
+    for (idx, c) in s.enumerated() {
+        lastIdx[Int(c.asciiValue!) - base] = idx
+    }
+    var seen = [Bool](repeating: false, count: 26)
+    var stack = [Int]()
+    for (idx, c) in s.enumerated() {
+        let val = Int(c.asciiValue!) - base
+        if seen[val] {
+            continue
+        }
+
+        while !stack.isEmpty && stack.last! > val && idx < lastIdx[stack.last!] {
+            seen[stack.removeLast()] = false
+        }
+        
+        stack.append(val)
+        seen[val] = true
+    }
+
+    return String(stack.map { Character(UnicodeScalar(UInt8($0 + base))) })
+}
+```
+
 [61. Rotate List](https://leetcode.com/problems/rotate-list/)
 ``` swift
 // 双指针
