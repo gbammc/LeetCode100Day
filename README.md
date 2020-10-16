@@ -1,3 +1,24 @@
+[213. House Robber II](https://leetcode.com/problems/house-robber-ii/)
+``` swift
+// DP
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func rob(_ nums: [Int]) -> Int {
+    func findMax(_ nums: ArraySlice<Int>) -> Int {
+        var prev1 = 0
+        var prev2 = 0
+        for n in nums {
+            let tmp = prev1
+            prev1 = max(prev2 + n, prev1)
+            prev2 = tmp
+        }
+        return prev1
+    }
+
+    return max(findMax(nums.dropFirst()), findMax(nums.dropLast()), nums.first ?? 0)
+}
+```
+
 [316. Remove Duplicate Letters](https://leetcode.com/problems/remove-duplicate-letters/)
 ``` swift
 // DP
