@@ -1,3 +1,42 @@
+[]()
+``` swift
+// 二分搜索
+// 时间复杂度：O(log(m) + log(n))
+// 空间复杂度：O(1)
+func searchMatrix(_ matrix: [[Int]], _ target: Int) -> Bool {
+    guard matrix.count > 0 && matrix[0].count > 0 else { return false }
+
+    var i = 0
+    var j = matrix.count - 1
+    while i <= j {
+        let m = i + (j - i) / 2
+        if matrix[m][0] == target {
+            return true
+        } else if matrix[m][0] > target {
+            j = m - 1
+        } else {
+            i = m + 1
+        }
+    }
+
+    i = i > 0 ? i - 1 : 0
+    var l = 0
+    var r = matrix[0].count - 1
+    while l <= r {
+        let m = l + (r - l) / 2
+        if matrix[i][m] == target {
+            return true
+        } else if matrix[i][m] > target {
+            r = m - 1
+        } else {
+            l = m + 1
+        }
+    }
+
+    return false
+}
+```
+
 [213. House Robber II](https://leetcode.com/problems/house-robber-ii/)
 ``` swift
 // DP
