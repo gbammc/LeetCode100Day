@@ -1,4 +1,37 @@
-[]()
+[187. Repeated DNA Sequences](https://leetcode.com/problems/repeated-dna-sequences/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func findRepeatedDnaSequences(_ s: String) -> [String] {
+    guard s.count > 10 else { return [] }
+    let dict = [Character("A"): 0,
+                Character("C"): 1,
+                Character("G"): 2,
+                Character("T"): 3]
+    let chars = Array(s)
+    let values = chars.map { dict[$0]! } // 映射，用于后面的位运算
+    let mask = (1 << 20) - 1
+    var set1 = Set<Int>()
+    var set2 = Set<Int>() // 用双集合判断是否已存在并只存在一次
+    var ret = [String]()
+    var val = 0
+    for j in 0 ..< 10 {
+        val <<= 2
+        val |= Int(values[j])
+    }
+    set1.insert(val)
+    for i in 10 ..< values.count {
+        val = (val << 2 & mask) | values[i] // 加速，每次只处理一个值，不再用10个值重新生成
+
+        if !set1.insert(val).inserted && set2.insert(val).inserted {
+            ret.append(String(chars[i - 9 ... i]))
+        }
+    }
+    return ret
+}
+```
+
+[74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/)
 ``` swift
 // 二分搜索
 // 时间复杂度：O(log(m) + log(n))
