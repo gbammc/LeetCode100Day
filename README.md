@@ -1,3 +1,33 @@
+[188. Best Time to Buy and Sell Stock IV](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/)
+``` swift
+// DP
+// 时间复杂度：O(n * k)
+// 空间复杂度：O(n * k)
+func maxProfit(_ k: Int, _ prices: [Int]) -> Int {
+    guard prices.count > 2 && k > 0 else { return 0 }
+
+    if k >= prices.count / 2 {
+        var ret = 0
+        for i in 1 ..< prices.count where prices[i] > prices[i - 1] {
+            ret += prices[i] - prices[i - 1]
+        }
+        return ret
+    }
+
+    var dp = [[Int]](repeating: [Int](repeating: 0, count: prices.count), count: k + 1)
+    var localMax = Int.min
+    for i in 1 ... k {
+        for j in 1 ..< prices.count {
+            localMax = max(localMax, dp[i - 1][j - 1] - prices[j - 1])
+            // localMax + prices[j]: max(dp[i - 1][jj - 1] + prices[j] - price[jj]), jj = 1 ..< j
+            dp[i][j] = max(dp[i][j - 1], localMax + prices[j])
+        }
+        localMax = Int.min
+    }
+    return dp[k][prices.count - 1]
+}
+```
+
 [187. Repeated DNA Sequences](https://leetcode.com/problems/repeated-dna-sequences/)
 ``` swift
 // 时间复杂度：O(n)
