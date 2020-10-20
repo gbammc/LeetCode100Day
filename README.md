@@ -1,3 +1,35 @@
+[133. Clone Graph](https://leetcode.com/problems/clone-graph/)
+``` swift
+// DFS
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func cloneGraph(_ node: Node?) -> Node? {
+    var dict = [Int: Node]() // 用于处理出现环时
+
+    func clone(_ node: Node?) -> Node? {
+        guard let node = node else { return nil }
+
+        if let visited = dict[node.val] {
+            return visited
+        }
+
+        let copy = Node(node.val)
+        var neighbors = [Node?]()
+        dict[copy.val] = copy
+        for n in node.neighbors {
+            if let clone = cloneGraph(n) {
+                neighbors.append(clone)
+            }
+        }
+        copy.neighbors = neighbors
+
+        return copy
+    }
+
+    return clone(node)
+}
+```
+
 [188. Best Time to Buy and Sell Stock IV](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/)
 ``` swift
 // DP
