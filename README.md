@@ -1,3 +1,35 @@
+[948. Bag of Tokens](https://leetcode.com/problems/bag-of-tokens/)
+``` swift
+// 贪心
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func bagOfTokensScore(_ tokens: [Int], _ P: Int) -> Int {
+    let tokens = tokens.sorted()
+    var score = 0
+    var maxScore = 0
+    var power = P
+    var i = 0
+    var j = tokens.count - 1
+    while i <= j {
+        if power >= tokens[i] {
+            power -= tokens[i]
+            i += 1
+            score += 1
+            maxScore = max(maxScore, score)
+        } else if score > 0 {
+            let p = tokens[j]
+            j -= 1
+            power += p
+            score -= 1
+        } else {
+            break
+        }
+    }
+
+    return maxScore
+}
+```
+
 [456. 132 Pattern](https://leetcode.com/problems/132-pattern/)
 ``` swift
 // Stack
@@ -11,7 +43,7 @@ func find132pattern(_ nums: [Int]) -> Bool {
     for i in 1 ..< nums.count {
         mins[i] = min(mins[i - 1], nums[i])
     }
-    
+
     var stack = [Int]()
     for j in stride(from: nums.count - 1, to: -1, by: -1) where nums[j] > mins[j] {
         while !stack.isEmpty && stack.last! <= mins[j] {
