@@ -1,3 +1,32 @@
+[456. 132 Pattern](https://leetcode.com/problems/132-pattern/)
+``` swift
+// Stack
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func find132pattern(_ nums: [Int]) -> Bool {
+    guard nums.count > 2 else { return false }
+
+    // 记录 nums[i] 前的最小值
+    var mins = [Int](repeating: nums[0], count: nums.count)
+    for i in 1 ..< nums.count {
+        mins[i] = min(mins[i - 1], nums[i])
+    }
+    
+    var stack = [Int]()
+    for j in stride(from: nums.count - 1, to: -1, by: -1) where nums[j] > mins[j] {
+        while !stack.isEmpty && stack.last! <= mins[j] {
+            stack.removeLast()
+        }
+        if !stack.isEmpty && stack.last! < nums[j] && stack.last! > mins[j] {
+            return true
+        }
+        stack.append(nums[j])
+    }
+
+    return false
+}
+```
+
 [133. Clone Graph](https://leetcode.com/problems/clone-graph/)
 ``` swift
 // DFS
