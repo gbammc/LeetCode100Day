@@ -1,3 +1,23 @@
+[1510. Stone Game IV](https://leetcode.com/problems/stone-game-iv/)
+``` swift
+// DP
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func winnerSquareGame(_ n: Int) -> Bool {
+    var dp = [Bool](repeating: false, count: n + 1)
+    for i in 1 ... n {
+        // 只要找到 i - k * k 前为 false，那么当前第 i 步即可为赢
+        for k in 1 ... Int(sqrt(Double(n))) where i - k * k >= 0 {
+            if !dp[i - k * k] {
+                dp[i] = true
+                break
+            }
+        }
+    }
+    return dp[n]
+}
+```
+
 [948. Bag of Tokens](https://leetcode.com/problems/bag-of-tokens/)
 ``` swift
 // 贪心
