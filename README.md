@@ -1,3 +1,21 @@
+[799. Champagne Tower](https://leetcode.com/problems/champagne-tower/)
+``` swift
+func champagneTower(_ poured: Int, _ query_row: Int, _ query_glass: Int) -> Double {
+    var dp = [[Double]](repeating: [Double](repeating: 0, count: query_row + 2), count: query_row + 2)
+    dp[0][0] = Double(poured)
+
+    for i in 0 ... query_row {
+        for j in 0 ... i where dp[i][j] > 1 {
+            dp[i + 1][j] += (dp[i][j] - 1) / 2
+            dp[i + 1][j + 1] += (dp[i][j] - 1) / 2
+            dp[i][j] = min(dp[i][j], 1)
+        }
+    }
+
+    return dp[query_row][query_glass]
+}
+```
+
 [1510. Stone Game IV](https://leetcode.com/problems/stone-game-iv/)
 ``` swift
 // DP
