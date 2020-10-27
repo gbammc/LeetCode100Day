@@ -1,5 +1,51 @@
+[142. Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii/)
+``` swift
+// 双指针
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func detectCycle(_ head: ListNode?) -> ListNode? {
+    // 1、判断是否有环
+    var slow = head
+    var fast = head?.next
+    while fast != nil {
+        if slow! === fast! {
+            // 2、跑一圈，获取环长度
+            var ptr = slow?.next
+            var idx = 1
+            while slow! !== ptr! {
+                idx += 1
+                ptr = ptr?.next
+            }
+
+            // 3.1、先让 second 跑一个环长度
+            var first = head
+            var second = head
+            while idx > 0 {
+                second = second?.next
+                idx -= 1
+            }
+
+            // 3.2、两个一起跑，直到相遇
+            while first! !== second! {
+                first = first?.next
+                second = second?.next
+            }
+
+            return first
+        }
+        slow = slow?.next
+        fast = fast?.next?.next
+    }
+
+    return nil
+}
+```
+
 [799. Champagne Tower](https://leetcode.com/problems/champagne-tower/)
 ``` swift
+// DP
+// 时间复杂度：O(R * R)
+// 空间复杂度：O(R * R)
 func champagneTower(_ poured: Int, _ query_row: Int, _ query_glass: Int) -> Double {
     var dp = [[Double]](repeating: [Double](repeating: 0, count: query_row + 2), count: query_row + 2)
     dp[0][0] = Double(poured)
@@ -8,7 +54,7 @@ func champagneTower(_ poured: Int, _ query_row: Int, _ query_glass: Int) -> Doub
         for j in 0 ... i where dp[i][j] > 1 {
             dp[i + 1][j] += (dp[i][j] - 1) / 2
             dp[i + 1][j + 1] += (dp[i][j] - 1) / 2
-            dp[i][j] = min(dp[i][j], 1)
+            dp[i][j] = 1
         }
     }
 
