@@ -1,3 +1,18 @@
+[849. Maximize Distance to Closest Person](https://leetcode.com/problems/maximize-distance-to-closest-person/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func maxDistToClosest(_ seats: [Int]) -> Int {
+    var prev = -1
+    var maxDist = 0
+    for i in 0 ..< seats.count where seats[i] == 1 {
+        maxDist = max(maxDist, prev == -1 ? i : (i - prev) / 2)
+        prev = i
+    }
+    return max(seats.count - prev - 1, maxDist)
+}
+```
+
 [142. Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii/)
 ``` swift
 // 双指针
