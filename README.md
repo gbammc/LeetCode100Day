@@ -1,8 +1,38 @@
-[673. Number of Longest Increasing Subsequence](https://leetcode.com/problems/number-of-longest-increasing-subsequence/)
+[1314. Matrix Block Sum](https://leetcode.com/problems/matrix-block-sum/)
 ``` swift
 // DP
 // 时间复杂度：O(n)
 // 空间复杂度：O(1)
+func matrixBlockSum(_ mat: [[Int]], _ K: Int) -> [[Int]] {
+    let m = mat.count
+    let n = mat[0].count
+    var anw = [[Int]](repeating: [Int](repeating: 0, count: n), count: m)
+    var accu = [[Int]](repeating: [Int](repeating: 0, count: n + 1), count: m + 1) // Running Total
+    for i in 1 ... m {
+        for j in 1 ... n {
+            accu[i][j] = mat[i - 1][j - 1] + accu[i - 1][j] + accu[i][j - 1] - accu[i - 1][j - 1]
+        }
+    }
+
+    for i in 0 ..< m {
+        for j in 0 ..< n {
+            let rowMin = max(i - K, 0)
+            let colMin = max(j - K, 0)
+            let rowMax = min(i + K + 1, m)
+            let colMax = min(j + K + 1, n)
+            anw[i][j] = accu[rowMax][colMax] - accu[rowMin][colMax] - accu[rowMax][colMin] + accu[rowMin][colMin]
+        }
+    }
+
+    return anw
+}
+```
+
+[673. Number of Longest Increasing Subsequence](https://leetcode.com/problems/number-of-longest-increasing-subsequence/)
+``` swift
+// DP
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
 func findNumberOfLIS(_ nums: [Int]) -> Int {
     guard nums.count > 0 else { return 0 }
 
