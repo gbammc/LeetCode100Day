@@ -1,3 +1,36 @@
+[673. Number of Longest Increasing Subsequence](https://leetcode.com/problems/number-of-longest-increasing-subsequence/)
+``` swift
+// DP
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func findNumberOfLIS(_ nums: [Int]) -> Int {
+    guard nums.count > 0 else { return 0 }
+
+    var length = [Int](repeating: 1, count: nums.count) // length[i] 表示到 i 为止的最长单调上升子序列的长度
+    var count = [Int](repeating: 1, count: nums.count) // count[i] 表示到 i 为止的最长单调上升子序列的个数
+    var maxLength = 0
+    var ret = 0
+    for i in 0 ..< nums.count {
+        for j in 0 ..< i where nums[j] < nums[i] {
+            if length[j] + 1 > length[i] {
+                length[i] = length[j] + 1
+                count[i] = count[j]
+            } else if length[j] + 1 == length[i] {
+                count[i] += count[j]
+            }
+        }
+        if length[i] == maxLength {
+            ret += count[i]
+        } else if length[i] > maxLength {
+            ret = count[i]
+            maxLength = length[i]
+        }
+    }
+
+    return ret
+}
+```
+
 [849. Maximize Distance to Closest Person](https://leetcode.com/problems/maximize-distance-to-closest-person/)
 ``` swift
 // 时间复杂度：O(n)
