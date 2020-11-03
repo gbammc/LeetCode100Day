@@ -1,3 +1,38 @@
+[147. Insertion Sort List](https://leetcode.com/problems/insertion-sort-list/)
+``` swift
+// 时间复杂度：O(n * n)
+// 空间复杂度：O(1)
+func insertionSortList(_ head: ListNode?) -> ListNode? {
+    guard head != nil && head?.next != nil else { return head }
+
+    let newHead = ListNode(Int.min)
+    newHead.next = head
+
+    var pre = head
+    var cur = head?.next
+    while cur != nil {
+        if cur!.val < pre!.val {
+            pre!.next = cur?.next
+
+            var node = newHead
+            while let next = node.next, cur!.val > next.val {
+                node = next
+            }
+            let tmp = node.next
+            node.next = cur
+            cur?.next = tmp
+
+            cur = pre!.next
+        } else {
+            pre = cur!
+            cur = pre!.next
+        }
+    }
+
+    return newHead.next
+}
+```
+
 [1314. Matrix Block Sum](https://leetcode.com/problems/matrix-block-sum/)
 ``` swift
 // DP
