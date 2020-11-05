@@ -1,3 +1,45 @@
+[310. Minimum Height Trees](https://leetcode.com/problems/minimum-height-trees/)
+``` swift
+// 利用拓扑排序，一层层排除叶子节点，直到最后只剩下不超过 2 个节点
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func findMinHeightTrees(_ n: Int, _ edges: [[Int]]) -> [Int] {
+    if n < 2 {
+        var centroids = [Int]()
+        for i in 0 ..< n {
+            centroids.append(i)
+        }
+        return centroids
+    }
+
+    var neighbors = [Set<Int>](repeating: Set<Int>(), count: n)
+    for e in edges {
+        neighbors[e[0]].insert(e[1])
+        neighbors[e[1]].insert(e[0])
+    }
+
+    var leaves = [Int]()
+    for i in 0 ..< n where neighbors[i].count == 1 {
+        leaves.append(i)
+    }
+    var remainingNodes = n
+    while remainingNodes > 2 {
+        remainingNodes -= leaves.count
+        var newLeaves = [Int]()
+        for l in leaves {
+            for n in neighbors[l] {
+                neighbors[n].remove(l)
+                if neighbors[n].count == 1 {
+                    newLeaves.append(n)
+                }
+            }
+        }
+        leaves = newLeaves
+    }
+    return leaves
+}
+```
+
 [147. Insertion Sort List](https://leetcode.com/problems/insertion-sort-list/)
 ``` swift
 // 时间复杂度：O(n * n)
