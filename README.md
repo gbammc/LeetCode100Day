@@ -1,3 +1,37 @@
+[1283. Find the Smallest Divisor Given a Threshold](https://leetcode.com/problems/find-the-smallest-divisor-given-a-threshold/)
+``` swift
+// 利用二分搜索加快速度
+// 时间复杂度：O(n * log(n))
+// 空间复杂度：O(1)
+func smallestDivisor(_ nums: [Int], _ threshold: Int) -> Int {
+    var l = 1
+    var r: Int = {
+        var max = 0
+        for n in nums where n > max {
+            max = n
+        }
+        return max
+    }()
+    while l <= r {
+        let mid = l + (r - l) / 2
+        var sum = 0
+        for n in nums {
+            sum += n / mid + (n % mid > 0 ? 1 : 0)
+            if sum > threshold {
+                break
+            }
+        }
+        if sum <= threshold {
+            r = mid - 1
+        } else {
+            l = mid + 1
+        }
+    }
+
+    return l
+}
+```
+
 [310. Minimum Height Trees](https://leetcode.com/problems/minimum-height-trees/)
 ``` swift
 // 利用拓扑排序，一层层排除叶子节点，直到最后只剩下不超过 2 个节点
