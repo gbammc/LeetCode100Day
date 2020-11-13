@@ -1,5 +1,8 @@
-[]()
+[47. Permutations II](https://leetcode.com/problems/permutations-ii/)
 ``` swift
+// 利用二分搜索加快速度
+// 时间复杂度：O(n!)
+// 空间复杂度：O(n)
 func permuteUnique(_ nums: [Int]) -> [[Int]] {
     var ret = [[Int]]()
     let nums = nums.sorted()
