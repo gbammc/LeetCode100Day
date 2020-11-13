@@ -1,3 +1,29 @@
+[]()
+``` swift
+func permuteUnique(_ nums: [Int]) -> [[Int]] {
+    var ret = [[Int]]()
+    let nums = nums.sorted()
+
+    func permute(_ i: Int, _ nums: [Int]) {
+        if i == nums.count - 1 {
+            ret.append(nums)
+            return
+        }
+
+        var n = nums // 保存当前交换结果
+        for k in i ..< nums.count {
+            if i != k && n[i] == n[k] {
+                continue
+            }
+            n.swapAt(i, k)
+            permute(i + 1, n)
+        }
+    }
+    permute(0, nums)
+    return ret
+}
+```
+
 [1283. Find the Smallest Divisor Given a Threshold](https://leetcode.com/problems/find-the-smallest-divisor-given-a-threshold/)
 ``` swift
 // 利用二分搜索加快速度
