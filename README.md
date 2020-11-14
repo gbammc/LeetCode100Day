@@ -1,3 +1,28 @@
+[116. Populating Next Right Pointers in Each Node](https://leetcode.com/problems/populating-next-right-pointers-in-each-node/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func connect(_ root: Node?) -> Node? {
+    guard let root = root else { return nil }
+    var pre: Node? = nil
+    var cur: Node? = root
+    while cur?.left != nil {
+        pre = cur
+        while pre != nil {
+            if pre?.left != nil {
+                pre?.left?.next = pre?.right
+            }
+            if pre?.next != nil {
+                pre?.right?.next = pre?.next?.left
+            }
+            pre = pre?.next // 通过 next 在层里遍历
+        }
+        cur = cur?.left // 到达每层最左节点
+    }
+    return root
+}
+```
+
 [47. Permutations II](https://leetcode.com/problems/permutations-ii/)
 ``` swift
 // 利用二分搜索加快速度
