@@ -1,3 +1,16 @@
+[458. Poor Pigs](https://leetcode.com/problems/poor-pigs/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func poorPigs(_ buckets: Int, _ minutesToDie: Int, _ minutesToTest: Int) -> Int {
+    var pig = 0
+    while pow(Decimal((minutesToTest / minutesToDie + 1)), pig) < Decimal(buckets) {
+        pig += 1
+    }
+    return pig
+}
+```
+
 [116. Populating Next Right Pointers in Each Node](https://leetcode.com/problems/populating-next-right-pointers-in-each-node/)
 ``` swift
 // 时间复杂度：O(n)
