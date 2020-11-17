@@ -1,3 +1,53 @@
+[845. Longest Mountain in Array](https://leetcode.com/problems/longest-mountain-in-array/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func longestMountain(_ A: [Int]) -> Int {
+    guard A.count >= 3 else { return 0 }
+
+    var ret = 0
+    var flag = -1
+    var start = -1
+    for i in 1 ..< A.count {
+        if flag == -1 {
+            if A[i] > A[i - 1] {
+                start = i - 1
+                flag = 0
+            }
+        } else if flag == 0 {
+            if A[i] > A[i - 1] {
+                // increasing
+            } else if A[i] == A[i - 1] {
+                start = -1
+                flag = -1
+            } else {
+                // start decrease
+                flag = 1
+            }
+        } else if flag == 1 {
+            if A[i] < A[i - 1] {
+                // decreasing
+            } else {
+                if start >= 0 {
+                    ret = max(ret, i - start)
+                }
+                if A[i] > A[i - 1] {
+                    start = i - 1
+                    flag = 0
+                } else {
+                    start = -1
+                    flag = -1
+                }
+            }
+        }
+    }
+    if flag == 1 && start >= 0 {
+        ret = max(ret, A.count - start)
+    }
+    return ret
+}
+```
+
 [458. Poor Pigs](https://leetcode.com/problems/poor-pigs/)
 ``` swift
 // 时间复杂度：O(n)
