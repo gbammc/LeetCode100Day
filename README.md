@@ -1,3 +1,26 @@
+[56. Merge Intervals](https://leetcode.com/problems/merge-intervals/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func merge(_ intervals: [[Int]]) -> [[Int]] {
+    guard intervals.count > 1 else { return intervals }
+    let intervals = intervals.sorted { $0[0] < $1[0] }
+    var ret = [[Int]]()
+    var cur = intervals[0]
+    for i in 1 ..< intervals.count {
+        let intr = intervals[i]
+        if intr[0] <= cur[1] {
+            cur[1] = max(cur[1], intr[1])
+        } else {
+            ret.append(cur)
+            cur = intr
+        }
+    }
+    ret.append(cur)
+    return ret
+}
+```
+
 [845. Longest Mountain in Array](https://leetcode.com/problems/longest-mountain-in-array/)
 ``` swift
 // 时间复杂度：O(n)
