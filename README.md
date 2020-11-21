@@ -1,3 +1,38 @@
+[]()
+``` swift
+// 时间复杂度：O(logn)
+// 空间复杂度：O(1)
+func search(_ nums: [Int], _ target: Int) -> Bool {
+    var l = 0
+    var h = nums.count - 1
+    while l <= h {
+        let mid = l + (h - l) / 2
+        if nums[mid] == target {
+            return true
+        }
+
+        if nums[mid] == nums[l] {
+            l += 1
+        } else if nums[mid] == nums[h] {
+            h -= 1
+        } else if nums[mid] > nums[h] {
+            if target > nums[mid] || target <= nums[h] {
+                l = mid + 1
+            } else {
+                h = mid - 1
+            }
+        } else {
+            if  nums[mid] < target && target <= nums[h] {
+                l = mid + 1
+            } else {
+                h = mid - 1
+            }
+        }
+    }
+    return false
+}
+```
+
 [56. Merge Intervals](https://leetcode.com/problems/merge-intervals/)
 ``` swift
 // 时间复杂度：O(n)
