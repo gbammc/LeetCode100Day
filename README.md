@@ -1,4 +1,37 @@
-[]()
+[902. Numbers At Most N Given Digit Set](https://leetcode.com/problems/numbers-at-most-n-given-digit-set/)
+``` swift
+// 时间复杂度：O(logn)
+// 空间复杂度：O(1)
+func atMostNGivenDigitSet(_ digits: [String], _ n: Int) -> Int {
+    var ret = 0
+    let digits = digits.map { Int($0)! }
+    let n = String(n).map { Int(String($0))! }
+    let nLen = n.count
+
+    // 计算 x, xx, xxx（x 的个数少于 n 的位数时）的数量
+    for i in 1 ..< nLen {
+        ret += Int(pow(Double(digits.count), Double(i)))
+    }
+    // 计算 xxxx（x 的个数等于 n 的位数时）的数量
+    for i in 0 ..< nLen {
+        var hasSame = false // 如果 digits 里有 n 完全一样的数字时，最后结果需要加一
+        for c in digits {
+            if c < n[i] {
+                ret += Int(pow(Double(digits.count), Double(nLen - i - 1)))
+            } else if c == n[i] {
+                hasSame = true
+            }
+        }
+        if !hasSame {
+            return ret
+        }
+    }
+
+    return ret + 1
+}
+```
+
+[81. Search in Rotated Sorted Array II](https://leetcode.com/problems/search-in-rotated-sorted-array-ii/)
 ``` swift
 // 时间复杂度：O(logn)
 // 空间复杂度：O(1)
