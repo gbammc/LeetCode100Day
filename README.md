@@ -1,3 +1,25 @@
+[337. House Robber III](https://leetcode.com/problems/house-robber-iii/)
+``` swift
+// DP
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func rob(_ root: TreeNode?) -> Int {
+    func dfs(_ node: TreeNode?) -> (rob: Int, noRob: Int) {
+        if node == nil {
+            return (0, 0)
+        }
+
+        let left = dfs(node?.left)
+        let right = dfs(node?.right)
+
+        return (node!.val + left.1 + right.1, 
+                max(left.0, left.1) + max(right.0, right.1))
+    }
+    let r = dfs(root)
+    return max(r.0, r.1)
+}
+```
+
 [902. Numbers At Most N Given Digit Set](https://leetcode.com/problems/numbers-at-most-n-given-digit-set/)
 ``` swift
 // 时间复杂度：O(logn)
