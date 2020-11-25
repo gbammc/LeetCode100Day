@@ -1,3 +1,33 @@
+[227. Basic Calculator II](https://leetcode.com/problems/basic-calculator-ii/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+// Runtime 100%
+func calculate(_ s: String) -> Int {
+    var stack = [Int]()
+    var op = Character("+")
+    var tmp = 0
+    for c in s + "+" where !c.isWhitespace {
+        if c.isNumber {
+            tmp = tmp * 10 + c.wholeNumberValue!
+        } else {
+            if op == Character("+") {
+                stack.append(tmp)
+            } else if op == Character("-") {
+                stack.append(-tmp)
+            } else if op == Character("*") {
+                stack.append(stack.removeLast() * tmp)
+            } else if op == Character("/") {
+                stack.append(stack.removeLast() / tmp)
+            }
+            op = c
+            tmp = 0
+        }
+    }
+    return stack.reduce(0) { $0 + $1 }
+}
+```
+
 [337. House Robber III](https://leetcode.com/problems/house-robber-iii/)
 ``` swift
 // DP
