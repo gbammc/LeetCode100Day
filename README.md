@@ -1,3 +1,22 @@
+[1015. Smallest Integer Divisible by K](https://leetcode.com/problems/smallest-integer-divisible-by-k/)
+``` swift
+// 时间复杂度：O(K)
+// 空间复杂度：O(n)
+// Runtime 100%
+func smallestRepunitDivByK(_ K: Int) -> Int {
+    // 除 2 或 5 外，在 N <= K 时，都存在一个值（11...111，N 个 1）符合条件
+    if K % 2 == 0 || K % 5 == 0 { return -1 } 
+    var r = 0
+    for N in 1 ... K {
+        r = (r * 10 + 1) % K // a*b % m = ( a%m * b%m ) % m
+        if r == 0 {
+            return N
+        }
+    }
+    return -1
+}
+```
+
 [227. Basic Calculator II](https://leetcode.com/problems/basic-calculator-ii/)
 ``` swift
 // 时间复杂度：O(n)
