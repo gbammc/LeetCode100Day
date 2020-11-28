@@ -10,7 +10,7 @@ func canPartition(_ nums: [Int]) -> Bool {
     let target = sum / 2
     var dp = [Bool?](repeating: nil, count: target + 1) // optional 用于区分是否已被访问
 
-    func topDown(_ i: Int, _ rest: Int) -> Bool {
+    func bottomUp(_ i: Int, _ rest: Int) -> Bool {
         if rest == 0 {
             return true
         }
@@ -23,13 +23,13 @@ func canPartition(_ nums: [Int]) -> Bool {
             return ret
         }
 
-        let ret = topDown(i + 1, rest - nums[i]) || topDown(i + 1, rest)
+        let ret = bottomUp(i + 1, rest - nums[i]) || bottomUp(i + 1, rest)
         dp[rest] = ret
 
         return ret
     }
 
-    return topDown(0, target)
+    return bottomUp(0, target)
 }
 ```
 [1015. Smallest Integer Divisible by K](https://leetcode.com/problems/smallest-integer-divisible-by-k/)
