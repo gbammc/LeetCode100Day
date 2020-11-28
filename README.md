@@ -1,3 +1,37 @@
+[416. Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/)
+``` swift
+// DP，bottom-up 比 top-down 更快
+// 时间复杂度：O(K)
+// 空间复杂度：O(n)
+func canPartition(_ nums: [Int]) -> Bool {
+    let sum = nums.reduce(0, +)
+    guard sum % 2 == 0 else { return false }
+
+    let target = sum / 2
+    var dp = [Bool?](repeating: nil, count: target + 1) // optional 用于区分是否已被访问
+
+    func topDown(_ i: Int, _ rest: Int) -> Bool {
+        if rest == 0 {
+            return true
+        }
+
+        if i >= nums.count || rest < 0 {
+            return false
+        }
+
+        if let ret = dp[rest] {
+            return ret
+        }
+
+        let ret = topDown(i + 1, rest - nums[i]) || topDown(i + 1, rest)
+        dp[rest] = ret
+
+        return ret
+    }
+
+    return topDown(0, target)
+}
+```
 [1015. Smallest Integer Divisible by K](https://leetcode.com/problems/smallest-integer-divisible-by-k/)
 ``` swift
 // 时间复杂度：O(K)
