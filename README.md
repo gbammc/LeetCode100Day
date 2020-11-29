@@ -1,3 +1,37 @@
+[1306. Jump Game III](https://leetcode.com/problems/jump-game-iii/)
+``` swift
+// BFS
+// 时间复杂度：O(K)
+// 空间复杂度：O(n)
+// Runtime 100%
+func canReach(_ arr: [Int], _ start: Int) -> Bool {
+    var arr = arr
+    func bfs(_ start: Int) -> Bool {
+        var queue = [Int]()
+        queue.append(start)
+        while !queue.isEmpty {
+            let cur = queue.removeFirst()
+            if arr[cur] == 0 {
+                return true
+            }
+            if arr[cur] < 0 {
+                continue
+            }
+            if cur + arr[cur] < arr.count {
+                queue.append(cur + arr[cur])
+            }
+            if cur - arr[cur] >= 0 {
+                queue.append(cur - arr[cur])
+            }
+            arr[cur] = -1
+        }
+        return false
+    }
+
+    return bfs(start)
+}
+```
+
 [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
 ``` swift
 // 时间复杂度：O(K)
