@@ -1,3 +1,47 @@
+[239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
+``` swift
+// 时间复杂度：O(K)
+// 空间复杂度：O(n)
+func maxSlidingWindow(_ nums: [Int], _ k: Int) -> [Int] {
+    var maxLeft = [Int](repeating: 0, count: nums.count)
+    var maxRight = [Int](repeating: 0, count: nums.count)
+    maxLeft[0] = nums[0]
+    maxRight[nums.count - 1] = nums[nums.count - 1]
+    for i in 1 ..< nums.count {
+        maxLeft[i] = (i % k == 0 ? nums[i] : max(maxLeft[i - 1], nums[i]))
+        let j = nums.count - 1 - i
+        maxRight[j] = j % k == 0 ? nums[j] : max(maxRight[j + 1], nums[j])
+    }
+
+    var ret = [Int](repeating: 0, count: nums.count - k + 1)
+    for i in 0 ..< nums.count - k + 1 {
+        ret[i] = max(maxRight[i], maxLeft[i + k - 1])
+    }
+    return ret
+
+//        // 双向队列
+//        guard k > 1 else { return nums }
+//
+//        var dequeue = [Int]()
+//        var ret = [Int]()
+//        for i in 0 ..< nums.count {
+//            // 移除窗口外索引
+//            while !dequeue.isEmpty && dequeue.first! < i - k + 1 {
+//                dequeue.removeFirst()
+//            }
+//            // 保持元素单调递增
+//            while !dequeue.isEmpty && nums[dequeue.last!] < nums[i] {
+//                dequeue.removeLast()
+//            }
+//            dequeue.append(i)
+//            if i >= k - 1 {
+//                ret.append(nums[dequeue.first!])
+//            }
+//        }
+//        return ret
+}
+```
+
 [416. Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/)
 ``` swift
 // DP，bottom-up 比 top-down 更快
@@ -32,6 +76,7 @@ func canPartition(_ nums: [Int]) -> Bool {
     return bottomUp(0, target)
 }
 ```
+
 [1015. Smallest Integer Divisible by K](https://leetcode.com/problems/smallest-integer-divisible-by-k/)
 ``` swift
 // 时间复杂度：O(K)
