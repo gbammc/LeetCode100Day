@@ -1,7 +1,76 @@
+[218. The Skyline Problem](https://leetcode.com/problems/the-skyline-problem/)
+``` swift
+// 归并排序
+// 时间复杂度：O(nlogn)
+// 空间复杂度：O(n)
+func getSkyline(_ buildings: [[Int]]) -> [[Int]] {
+    func merge(_ A: [(Int, Int)], _ B: [(Int, Int)]) -> [(Int, Int)] {
+        var ret = [(Int, Int)]()
+        var h1 = 0
+        var h2 = 0
+        var i = 0
+        var j = 0
+        while i < A.count && j < B.count {
+            var x = 0
+            var h = 0
+
+            if A[i].0 < B[j].0 {
+                x = A[i].0
+                h1 = A[i].1
+                h = max(h1, h2)
+                i += 1
+            } else if A[i].0 > B[j].0 {
+                x = B[j].0
+                h2 = B[j].1
+                h = max(h1, h2)
+                j += 1
+            } else {
+                x = A[i].0
+                h1 = A[i].1
+                h2 = B[j].1
+                h = max(h1, h2)
+                i += 1
+                j += 1
+            }
+            if ret.isEmpty || h != ret.last!.1 { // 高度有变化
+                ret.append((x, h))
+            }
+        }
+        while i < A.count {
+            ret.append(A[i])
+            i += 1
+        }
+        while j < B.count {
+            ret.append(B[j])
+            j += 1
+        }
+        return ret
+    }
+
+    func recurSkyline(_ A: [[Int]], _ s: Int, _ e: Int) -> [(Int, Int)] {
+        if e > s {
+            let mid = s + (e - s) / 2
+            let B = recurSkyline(A, s, mid)
+            let C = recurSkyline(A, mid + 1, e)
+            return merge(B, C)
+        } else {
+            var v = [(Int, Int)]()
+            v.append((A[s][0], A[s][2]))
+            v.append((A[s][1], 0))
+            return v
+        }
+    }
+
+    guard buildings.count > 0 else { return buildings }
+
+    return recurSkyline(buildings, 0, buildings.count - 1).map { [$0.0, $0.1] }
+}
+```
+
 [1306. Jump Game III](https://leetcode.com/problems/jump-game-iii/)
 ``` swift
 // BFS
-// 时间复杂度：O(K)
+// 时间复杂度：O(n)
 // 空间复杂度：O(n)
 // Runtime 100%
 func canReach(_ arr: [Int], _ start: Int) -> Bool {
@@ -393,7 +462,7 @@ func permuteUnique(_ nums: [Int]) -> [[Int]] {
 [1283. Find the Smallest Divisor Given a Threshold](https://leetcode.com/problems/find-the-smallest-divisor-given-a-threshold/)
 ``` swift
 // 利用二分搜索加快速度
-// 时间复杂度：O(n * log(n))
+// 时间复杂度：O(nlogn)
 // 空间复杂度：O(1)
 func smallestDivisor(_ nums: [Int], _ threshold: Int) -> Int {
     var l = 1
