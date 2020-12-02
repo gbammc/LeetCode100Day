@@ -1,3 +1,35 @@
+[382. Linked List Random Node](https://leetcode.com/problems/linked-list-random-node/)
+``` swift
+// Reservoir sampling
+// 时间复杂度：O(n(1+log(N/n)))
+// 空间复杂度：O(1)
+class Solution {
+
+    /** @param head The linked list's head.
+        Note that the head is guaranteed to be not null, so it contains at least one node. */
+    let head: ListNode?
+
+    init(_ head: ListNode?) {
+        self.head = head
+    }
+
+    func getRandom() -> Int {
+        var val = head!.val
+        var node = head?.next
+        var i = 2
+        while node != nil {
+            let target = Int.random(in: 0 ..< i)
+            if target == 0 {
+                val = node!.val
+            }
+            i += 1
+            node = node?.next
+        }
+        return val
+    }
+}
+```
+
 [218. The Skyline Problem](https://leetcode.com/problems/the-skyline-problem/)
 ``` swift
 // 归并排序
