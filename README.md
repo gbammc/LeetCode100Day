@@ -1,3 +1,38 @@
+[59. Spiral Matrix II](https://leetcode.com/problems/spiral-matrix-ii/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n*n)
+func generateMatrix(_ n: Int) -> [[Int]] {
+    var matrix = [[Int]](repeating: [Int](repeating: 0, count: n), count: n)
+    var i = 0
+    var j = 0
+    var count = 1
+    var dir = 0
+    let range = 0 ..< n
+    // 利用表做方向转换
+    let direction = [
+        [0, 1],
+        [1, 0],
+        [0, -1],
+        [-1, 0]
+    ]
+    while count <= n * n {
+        matrix[i][j] = count
+        count += 1
+        var row = i + direction[dir].first!
+        var col = j + direction[dir].last!
+        if !range.contains(row) || !range.contains(col) || matrix[row][col] != 0 {
+            dir = (dir + 1) % 4
+            row = i + direction[dir].first!
+            col = j + direction[dir].last!
+        }
+        i = row
+        j = col
+    }
+    return matrix
+}
+```
+
 [382. Linked List Random Node](https://leetcode.com/problems/linked-list-random-node/)
 ``` swift
 // Reservoir sampling
