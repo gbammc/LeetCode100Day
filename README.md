@@ -1,3 +1,42 @@
+[117. Populating Next Right Pointers in Each Node II](https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func connect(_ root: Node?) -> Node? {
+    guard let root = root else { return nil }
+    var cur: Node? = root
+    var nextHead: Node?
+    var nextNode: Node?
+    while cur != nil {
+        while cur != nil {
+            if let left = cur?.left {
+                if nextHead == nil {
+                    nextHead = left
+                    nextNode = left
+                } else {
+                    nextNode?.next = left
+                    nextNode = nextNode?.next
+                }
+            }
+            if let right = cur?.right {
+                if nextHead == nil {
+                    nextHead = right
+                    nextNode = right
+                } else {
+                    nextNode?.next = right
+                    nextNode = nextNode?.next
+                }
+            }
+            cur = cur?.next
+        }
+        cur = nextHead
+        nextHead = nil
+        nextNode = nil
+    }
+    return root
+}
+```
+
 [59. Spiral Matrix II](https://leetcode.com/problems/spiral-matrix-ii/)
 ``` swift
 // 时间复杂度：O(n)
