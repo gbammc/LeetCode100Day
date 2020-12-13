@@ -1,3 +1,27 @@
+[865. Smallest Subtree with all the Deepest Nodes](https://leetcode.com/problems/smallest-subtree-with-all-the-deepest-nodes/)
+``` swift
+// DFS
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func subtreeWithAllDeepest(_ root: TreeNode?) -> TreeNode? {
+    func dfs(_ root: TreeNode?) -> (Int, TreeNode?) {
+        guard let node = root else { return (0, nil) }
+        
+        let left = dfs(node.left)
+        let right = dfs(node.right)
+        
+        if left.0 == right.0 {
+            return (left.0 + 1, root)
+        } else {
+            return (left.0 > right.0 ? left.0 + 1 : right.0 + 1,
+                    left.0 > right.0 ? left.1 : right.1)
+        }
+    }
+    
+    return dfs(root).1
+}
+```
+
 [117. Populating Next Right Pointers in Each Node II](https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/)
 ``` swift
 // 时间复杂度：O(n)
