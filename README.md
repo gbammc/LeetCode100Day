@@ -1,3 +1,57 @@
+[1463. Cherry Pickup II](https://leetcode.com/problems/cherry-pickup-ii/)
+``` swift
+// DP, top down
+// 时间复杂度：O(m * n * n)
+// 空间复杂度：O(m * n * n)
+func cherryPickup(_ grid: [[Int]]) -> Int {
+    let m = grid.count
+    let n = grid[0].count
+    var dp = [[[Int]]](repeating: [[Int]](repeating: [Int](repeating: -1, count: n), count: n), count: m)
+    func dfs(_ r: Int, _ c1: Int, _ c2: Int) -> Int {
+        guard r < m else { return 0 }
+        guard dp[r][c1][c2] == -1 else { return dp[r][c1][c2] }
+        var ret = 0
+        for i in -1 ... 1 {
+            for j in -1 ... 1 {
+                let newC1 = c1 + i
+                let newC2 = c2 + j
+                if newC1 >= 0 && newC1 < n && newC2 >= 0 && newC2 < n {
+                    ret = max(ret, dfs(r + 1, newC1, newC2))
+                }
+            }
+        }
+        let cherries = c1 == c2 ? grid[r][c1] : grid[r][c1] + grid[r][c2]
+        dp[r][c1][c2] = ret + cherries
+        return ret + cherries
+    }
+    return dfs(0, 0, n - 1)
+}
+```
+
+[334. Increasing Triplet Subsequence](https://leetcode.com/problems/increasing-triplet-subsequence/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func increasingTriplet(_ nums: [Int]) -> Bool {
+    guard nums.count >= 3 else { return false }
+    var l1 = nums[0]
+    var l2 = Int.max
+    
+    for i in 1 ..< nums.count {
+        let n = nums[i]
+        if n > l2 {
+            return true
+        } else if n < l1 {
+            l1 = min(l1, n)
+        } else if n > l1 {
+            l2 = min(l2, n)
+        }
+    }
+    
+    return false
+}
+```
+
 [865. Smallest Subtree with all the Deepest Nodes](https://leetcode.com/problems/smallest-subtree-with-all-the-deepest-nodes/)
 ``` swift
 // DFS
