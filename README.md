@@ -1,4 +1,38 @@
-[]()
+[556. Next Greater Element III](https://leetcode.com/problems/next-greater-element-iii/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func nextGreaterElement(_ n: Int) -> Int {
+    var digits = String(n).map{ Int(String($0))! }
+    
+    var i = digits.count - 1
+    while i - 1 >= 0 && digits[i - 1] >= digits[i] {
+        i -= 1
+    }
+    
+    if i == 0 {
+        return -1
+    }
+    
+    var j = i
+    while j + 1 < digits.count && digits[j + 1] > digits[i - 1] {
+        j += 1
+    }
+    
+    (digits[i - 1], digits[j]) = (digits[j], digits[i - 1])
+    let leftPart = digits[0 ... i - 1]
+    let rightPart = digits[i...]
+    let assemble = Array(leftPart + rightPart.sorted())
+    let ret = assemble.reduce(into: 0) {
+        $0 *= 10
+        $0 += $1
+    }
+    
+    return ret < (1 << 31) ? ret : -1
+}
+```
+
+[91. Decode Ways](https://leetcode.com/problems/decode-ways/)
 ``` swift
 // DP
 // 时间复杂度：O(n)
