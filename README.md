@@ -1,3 +1,28 @@
+[]()
+``` swift
+// DP
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func numDecodings(_ s: String) -> Int {
+    let digits = Array(s).map { Int(String($0))! }
+    var dp = [Int](repeating: 0, count: digits.count + 1)
+    dp[0] = 1
+    dp[1] = digits[0] != 0 ? 1 : 0
+    if s.count > 1 {
+        for i in 2 ... digits.count {
+            if digits[i - 1] != 0 {
+                dp[i] += dp[i - 1]
+            }
+            let k = digits[i - 2] * 10 + digits[i - 1]
+            if k >= 10 && k <= 26 {
+                dp[i] += dp[i - 2]
+            }
+        }
+    }
+    return dp[s.count]
+}
+```
+
 [1463. Cherry Pickup II](https://leetcode.com/problems/cherry-pickup-ii/)
 ``` swift
 // DP, top down
