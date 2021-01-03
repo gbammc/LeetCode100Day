@@ -1,3 +1,31 @@
+[880. Decoded String at Index](https://leetcode.com/problems/decoded-string-at-index/)
+``` swift
+func decodeAtIndex(_ S: String, _ K: Int) -> String {
+    let S = Array(S)
+    var i = 0
+    var N = 0
+    var K = K
+    while N < K {
+        N = S[i].isNumber ? N * Int(String(S[i]))! : N + 1
+        i += 1
+    }
+    while i > 0 {
+        i -= 1
+        if S[i].isNumber {
+            N /= Int(String(S[i]))!
+            K %= N
+        } else {
+            if K % N == 0 {
+                return String(S[i])
+            }
+            N -= 1
+        }
+    }
+
+    return ""
+}
+```
+
 [556. Next Greater Element III](https://leetcode.com/problems/next-greater-element-iii/)
 ``` swift
 // 时间复杂度：O(n)
@@ -2533,6 +2561,7 @@ func countElements(_ arr: [Int]) -> Int {
 [84. Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/)
 ``` swift
 // 栈法
+// 对于每一个柱子，找到左边的比它短的i, 右边比他短的j，然后局部max就是(j - i - 1) * h
 // 时间复杂度：O(n)
 func largestRectangleArea(_ heights: [Int]) -> Int {
     var res = 0
