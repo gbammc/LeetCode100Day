@@ -1,3 +1,64 @@
+[127. Word Ladder](https://leetcode.com/problems/word-ladder/)
+``` swift
+func ladderLength(_ beginWord: String, _ endWord: String, _ wordList: [String]) -> Int {
+    let set = Set<String>(wordList)
+    var queue = [String]()
+    var visited = Set<String>()
+    
+    queue.append(beginWord)
+    visited.insert(beginWord)
+    
+    var level = 0
+    
+    while !queue.isEmpty {
+        var size = queue.count
+        level += 1
+        
+        while size > 0 {
+            size -= 1
+            
+            let word = queue.removeFirst()
+            if word == endWord {
+                return level
+            }
+            
+            for i in 0 ..< word.count {
+                var chars = Array(word)
+                for c in "qwertyuiopasdfghjklzxcvbnm" {
+                    chars[i] = c
+                    let newWord = String(chars)
+                    if set.contains(newWord) && !visited.contains(newWord) {
+                        queue.append(newWord)
+                        visited.insert(newWord)
+                    }
+                }
+            }
+        }
+    }
+    
+    return 0
+}
+```
+
+[3. Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
+``` swift
+func lengthOfLongestSubstring(_ s: String) -> Int {
+    guard s.count > 1 else { return s.count }
+    let chars = Array(s)
+    var dict = [Character: Int]()
+    var res = 0
+    var ptr = 0
+    for i in 0 ..< chars.count {
+        if let last = dict[chars[i]], last >= ptr {
+            ptr = last + 1
+        }
+        res = max(res, i - ptr + 1)
+        dict[chars[i]] = i
+    }
+    return res
+}
+```
+
 [880. Decoded String at Index](https://leetcode.com/problems/decoded-string-at-index/)
 ``` swift
 func decodeAtIndex(_ S: String, _ K: Int) -> String {
