@@ -1,5 +1,374 @@
+[3. Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func lengthOfLongestSubstring(_ s: String) -> Int {
+    guard s.count > 1 else { return s.count }
+    let chars = Array(s)
+    var dict = [Character: Int]()
+    for c in "qwertyuiopasdfghjklzxcvbnm" {
+        dict[c] = -1
+    }
+    var res = 0
+    var ptr = 0
+    for i in 0 ..< chars.count {
+        ptr = max(ptr, dict[chars[i]]! + 1)
+        res = max(res, i - ptr + 1)
+        dict[chars[i]] = i
+    }
+    return res
+}
+```
+
+[31. Next Permutation](https://leetcode.com/problems/next-permutation/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func nextPermutation(_ nums: inout [Int]) {
+    guard nums.count > 1 else { return }
+    
+    var i = nums.count - 1
+    while i - 1 >= 0 && nums[i - 1] >= nums[i] {
+        i -= 1
+    }
+    
+    if i == 0 {
+        nums.sort()
+        return
+    }
+    
+    var j = i
+    while j + 1 < nums.count && nums[j + 1] > nums[i - 1] {
+        j += 1
+    }
+    
+    (nums[i - 1], nums[j]) = (nums[j], nums[i - 1])
+    let leftPart = nums[0 ... i - 1]
+    let rightPart = nums[i...]
+    let assemble = Array(leftPart + rightPart.sorted())
+    nums = assemble
+}
+```
+
+[1675. Minimize Deviation in Array](https://leetcode.com/problems/minimize-deviation-in-array/)
+``` swift
+// 时间复杂度：O(n * log(n))
+// 空间复杂度：O(n)
+func minimumDeviation(_ nums: [Int]) -> Int {
+    guard !nums.isEmpty else { return 0 }
+
+    var arr = [Int]()
+
+    func insert(_ target: Int) {
+        if arr.isEmpty {
+            arr.append(target)
+            return
+        }
+
+        var l = 0
+        var r = arr.count - 1
+        while l < r {
+            let m = l + (r - l) / 2
+
+            if arr[m] < target {
+                l = m + 1
+            } else {
+                r = m
+            }
+        }
+
+        if arr[l] < target {
+            arr.insert(target, at: l + 1)
+        } else if arr[l] > target {
+            arr.insert(target, at: l)
+        }
+    }
+
+    for n in nums {
+        insert(n % 2 == 0 ? n : n * 2)
+    }
+
+    var res = arr.last! - arr.first!
+    while arr.last! % 2 == 0 {
+        insert(arr.last! / 2)
+        arr.removeLast()
+        res = min(res, arr.last! - arr.first!)
+    }
+
+    return res
+}
+```
+
+[5. Longest Palindromic Substring](https://leetcode.com/submissions/detail/449549822/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func longestPalindrome(_ s: String) -> String {
+    let chars = Array(s)
+    let n = chars.count
+    var l = 0
+    var r = 0
+    var len = 1
+    var center = 0
+    var start = 0
+    
+    while center < n {
+        l = center
+        r = center
+        
+        while r + 1 < n && chars[l]  == chars[r + 1] {
+            r += 1
+        }
+        
+        center = r + 1
+        
+        while l - 1 >= 0 && r + 1 < n && chars[l - 1] == chars[r + 1] {
+            l -= 1
+            r += 1
+        }
+        
+        if len < r - l + 1 {
+            len = r - l + 1
+            start = l
+        }
+    }
+    
+    return String(chars[start ..< start + len])
+}
+```
+
+[1680. Concatenation of Consecutive Binary Numbers](https://leetcode.com/problems/concatenation-of-consecutive-binary-numbers/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func concatenatedBinary(_ n: Int) -> Int {
+    let mod = 1_000_000_007
+    var res = 0
+    var len = 0
+    for i in 1 ... n {
+        if i & (i - 1) == 0 {
+            len += 1
+        }
+        
+        res = (res << len) % mod
+        res += i % mod
+    }
+    return res
+}
+```
+
+[1631. Path With Minimum Effort](https://leetcode.com/problems/path-with-minimum-effort/)
+``` swift
+// 时间复杂度：O(n * n * log(n))
+// 空间复杂度：O(n * n)
+func minimumEffortPath(_ heights: [[Int]]) -> Int {
+    let rc = heights.count, cc = rc > 0 ? heights[0].count : 0
+    // BFS
+    func helper(_ k: Int) -> Bool {
+        var dp = [[Bool]](repeating: [Bool](repeating: true, count: cc), count: rc), nextQueue = [(Int, Int)]()
+        func addToQueue(_ row: Int, _ col: Int) {
+            dp[row][col] = false
+            nextQueue.append((row, col))
+        }
+        addToQueue(0, 0)
+        while !nextQueue.isEmpty {
+            let queue = nextQueue
+            nextQueue = []
+            for (row, col) in queue {
+                if row == rc - 1 && col == cc - 1 { 
+                    return true 
+                }
+                if row > 0 && dp[row - 1][col] && abs(heights[row][col] - heights[row - 1][col]) <= k { 
+                    addToQueue(row - 1, col) 
+                }
+                if col > 0 && dp[row][col - 1] && abs(heights[row][col] - heights[row][col - 1]) <= k { 
+                    addToQueue(row, col - 1) 
+                }
+                if row < rc - 1 && dp[row + 1][col] && abs(heights[row][col] - heights[row + 1][col]) <= k { 
+                    addToQueue(row + 1, col) 
+                }
+                if col < cc - 1 && dp[row][col + 1] && abs(heights[row][col] - heights[row][col + 1]) <= k { 
+                    addToQueue(row, col + 1) 
+                }
+            }
+        }
+        return false
+    }
+    // 二分搜索
+    var left = 0, right = heights.reduce(into: Int(0), { $0 = max($0, $1.max() ?? 0) })
+    while left < right {
+        let center = (left + right) / 2
+        if helper(center) {
+            right = center
+        } else {
+            left = center + 1
+        }
+    }
+    return left
+}
+```
+
+[1657. Determine if Two Strings Are Close](https://leetcode.com/problems/determine-if-two-strings-are-close/)
+``` swift
+// 时间复杂度：O(n + m)
+// 空间复杂度：O(n + m)
+func closeStrings(_ word1: String, _ word2: String) -> Bool {
+    guard word1.count == word2.count else { return false }
+    
+    let w1 = Array(word1).reduce(into: [Character: Int]()) { $0[$1, default: 0] += 1 }
+    let w2 = Array(word2).reduce(into: [Character: Int]()) { $0[$1, default: 0] += 1 }
+    
+    return Set(w1.keys) == Set(w2.keys) && Set(w1.values) == Set(w2.values)
+}
+```
+
+[1673. Find the Most Competitive Subsequence](https://leetcode.com/problems/find-the-most-competitive-subsequence/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func mostCompetitive(_ nums: [Int], _ k: Int) -> [Int] {
+    var res = [Int]()
+    let n = nums.count
+    for i in 0 ..< n {
+        while res.count > 0 && n + res.count - i > k && res.last! > nums[i] {
+            res.removeLast()
+        }
+        if res.count < k {
+            res.append(nums[i])
+        }
+    }
+    return res
+}
+```
+
+[821. Shortest Distance to a Character](https://leetcode.com/problems/shortest-distance-to-a-character/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func shortestToChar(_ s: String, _ c: Character) -> [Int] {
+    let chars = Array(s)
+    var ret = [Int](repeating: 0, count: chars.count)
+    var last = -1
+    for (i, ch) in chars.enumerated() where ch == c {
+        for j in stride(from: i - 1, to: last, by: -1) {
+            ret[j] = min(i - j, j - (last != -1 ? last : -100000))
+        }
+        last = i
+    }
+    for j in 1 ..< chars.count - last {
+        ret[last + j] = j
+    }
+    return ret
+}
+```
+
+[138. Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func copyRandomList(_ head: Node?) -> Node? {
+    let dummy = Node(-1)
+    var cur = head
+    while cur != nil {
+        let copy = Node(cur!.val)
+        copy.next = cur?.next
+        cur?.next = copy
+        cur = copy.next
+    }
+    cur = head
+    while cur != nil {
+        cur?.next?.random = cur?.random?.next
+        cur = cur?.next?.next
+    }
+    cur = head
+    var copy: Node? = dummy
+    while cur != nil {
+        copy?.next = cur?.next
+        copy = copy?.next
+        cur?.next = cur?.next?.next
+        cur = cur?.next
+    }
+    return dummy.next
+}
+```
+
+[1091. Shortest Path in Binary Matrix](https://leetcode.com/problems/shortest-path-in-binary-matrix/)
+``` swift
+// 时间复杂度：O(n * m)
+// 空间复杂度：O(n * m)
+func shortestPathBinaryMatrix(_ grid: [[Int]]) -> Int {
+    guard grid[0][0] == 0 else { return -1 }
+    let n = grid.count
+    let m = grid[0].count
+    guard n > 1 && m > 1 else { return grid[0][0] == 0 ? 1 : -1 }
+    var res = 1
+    var visited = [[Bool]](repeating: [Bool](repeating: false, count: m), count: n)
+    visited[0][0] = true
+    var queue = [(0, 0)]
+    let dir = [
+        (1, 1), (1, -1), (-1, 1), (-1, -1),
+        (1, 0), (0, 1), (0, -1), (-1, 0)
+    ]
+    
+    while !queue.isEmpty {
+        var q = [(Int, Int)]()
+        for item in queue {
+            for d in dir {
+                let x = item.0 + d.0
+                let y = item.1 + d.1
+                if x >= 0 && x < n && y >= 0 && y < m && grid[x][y] == 0 && !visited[x][y] {
+                    q.append((x, y))
+                    visited[x][y] = true
+                    
+                    if x == n - 1 && y == m - 1 {
+                        return res + 1
+                    }
+                }
+            }
+        }
+        res += 1
+        queue = q
+    }
+    
+    return -1
+}
+```
+
+[785. Is Graph Bipartite?](https://leetcode.com/problems/is-graph-bipartite/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func isBipartite(_ graph: [[Int]]) -> Bool {
+    var memo = [Int](repeating: 0, count: graph.count)
+    var set: Set<Int> = Array(0 ..< graph.count).reduce(into: Set<Int>()) { _ = $0.insert($1) }
+    var queue = [0]
+    while !set.isEmpty {
+        let start = set.removeFirst()
+        queue = [start]
+        memo[start] = 1
+        while !queue.isEmpty {
+            let n = queue.removeLast()
+            for e in graph[n] {
+                if memo[n] == memo[e] {
+                    return false
+                }
+                if memo[e] == 0 {
+                    memo[e] = memo[n] * -1
+                    queue.append(e)
+                    set.remove(e)
+                }
+            }
+        }
+    }
+    
+    return true
+}
+```
+
 [127. Word Ladder](https://leetcode.com/problems/word-ladder/)
 ``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
 func ladderLength(_ beginWord: String, _ endWord: String, _ wordList: [String]) -> Int {
     let set = Set<String>(wordList)
     var queue = [String]()
@@ -42,6 +411,8 @@ func ladderLength(_ beginWord: String, _ endWord: String, _ wordList: [String]) 
 
 [3. Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
 ``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
 func lengthOfLongestSubstring(_ s: String) -> Int {
     guard s.count > 1 else { return s.count }
     let chars = Array(s)
@@ -61,6 +432,8 @@ func lengthOfLongestSubstring(_ s: String) -> Int {
 
 [880. Decoded String at Index](https://leetcode.com/problems/decoded-string-at-index/)
 ``` swift
+// 时间复杂度：O(K)
+// 空间复杂度：O(1)
 func decodeAtIndex(_ S: String, _ K: Int) -> String {
     let S = Array(S)
     var i = 0
