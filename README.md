@@ -1,3 +1,109 @@
+[991. Broken Calculator](https://leetcode.com/problems/broken-calculator/)
+``` swift
+func brokenCalc(_ X: Int, _ Y: Int) -> Int {
+    guard Y > X else { return X - Y }
+    guard X != Y else { return 0 }
+    var res = 0
+    var queue = [Y]
+    while !queue.isEmpty {
+        var count = queue.count
+        while count > 0 {
+            let cur = queue.removeFirst()
+            if cur < X {
+                return res + X - cur
+            }
+            if cur == X {
+                return res
+            }
+            if cur % 2 == 0 {
+                queue.append(cur / 2)
+            } else {
+                queue.append(cur + 1)
+            }
+            count -= 1
+        }
+        res += 1
+    }
+    return -1
+}
+```
+
+[524. Longest Word in Dictionary through Deleting](https://leetcode.com/problems/longest-word-in-dictionary-through-deleting/)
+``` swift
+// 时间复杂度：O(n * m)
+// 空间复杂度：O(n * m)
+func findLongestWord(_ s: String, _ d: [String]) -> String {
+    let s = Array(s), d = d.sorted().map({ Array($0) }), sCount = s.count
+    var result = [Character]()
+    for str in d {
+        let strCount = str.count
+        var sIndex = 0, strIndex = 0
+        while sIndex < sCount && strIndex < strCount {
+            if s[sIndex] == str[strIndex] {
+                strIndex += 1
+            }
+            sIndex += 1
+        }
+        if strIndex == strCount && result.count < str.count {
+            result = str
+        }
+    }
+    return String(result)
+}
+```
+
+[895. Maximum Frequency Stack](https://leetcode.com/problems/maximum-frequency-stack/)
+``` swift
+class FreqStack {
+    var maxFreq = 0
+    var freqDict = [Int: [Int]]()
+    var map = [Int: Int]()
+
+     init() {
+         
+     }
+     
+     func push(_ x: Int) {
+        map[x, default: 0] += 1
+        let f = map[x]!
+        if f > maxFreq {
+            maxFreq += 1
+        }
+        freqDict[f, default: []].append(x)
+     }
+     
+     func pop() -> Int {
+        let res = freqDict[maxFreq]!.removeLast()
+        map[res, default: 0] -= 1
+        if freqDict[maxFreq]!.isEmpty {
+            maxFreq -= 1
+        }
+        return res
+     }
+}
+```
+
+[645. Set Mismatch](https://leetcode.com/problems/set-mismatch/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func findErrorNums(_ nums: [Int]) -> [Int] {
+    var tmp = nums
+    var mis = 0
+    var rep = 0
+    for n in tmp {
+        tmp[n - 1] *= -1
+        if tmp[n - 1] > 0 {
+            rep = n
+        }
+    }
+    for (i, n) in tmp.enumerated() where n > 0 && i + 1 != rep {
+        mis = i + 1
+    }
+    return [rep, mis]
+}
+```
+
 [3. Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
 ``` swift
 // 时间复杂度：O(n)
