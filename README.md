@@ -1,3 +1,77 @@
+[478. Generate Random Point in a Circle](https://leetcode.com/problems/generate-random-point-in-a-circle/)
+``` swift
+class Solution {
+
+    var radius: Double = 0
+    var x: Double = 0
+    var y: Double = 0
+    
+    init(_ radius: Double, _ x_center: Double, _ y_center: Double) {
+        self.radius = radius
+        self.x = x_center
+        self.y = y_center
+    }
+    
+    func randPoint() -> [Double] {
+        let t = Double.random(in: 0 ..< Double.pi * 2)
+        // 用 sqrt 作为反函数
+        let r = radius * sqrt(Double.random(in: 0 ..< 1))
+        return [
+            r * cos(t) + x,
+            r * sin(t) + y,
+        ]
+    }
+
+}
+```
+
+
+[322. Coin Change](https://leetcode.com/problems/coin-change/)
+``` swift
+// DP
+// 时间复杂度：O(n * m)
+// 空间复杂度：O(n)
+func coinChange(_ coins: [Int], _ amount: Int) -> Int {      
+    guard amount > 0 else { return 0 }
+    var dp = [Int](repeating: 1000001, count: amount + 1)
+    dp[0] = 0
+    for i in 1 ... amount {
+        for c in coins {
+            if i >= c {
+                dp[i] = min(dp[i], dp[i - c] + 1)
+            }
+        }
+    }
+    return dp.last! == 1000001 ? -1 : dp.last!
+}
+
+// DFS
+func coinChange(_ coins: [Int], _ amount: Int) -> Int {
+    var res = Int.max
+    let coins = coins.sorted(by: <)
+    
+    func dfs(_ i: Int, _ n: Int, _ count: Int) {
+        guard i >= 0 else { return }
+        var times = n / coins[i]
+        while times >= 0 {
+            let left = n - times * coins[i]
+            let newCount = count + times
+            if left == 0 {
+                res = min(res, newCount)
+                break
+            }
+            if newCount + 1 >= res {
+                break
+            }
+            dfs(i - 1, left, newCount)
+            times -= 1
+        }
+    }
+    dfs(coins.count - 1, amount, 0)
+    return res == Int.max ? -1: res
+}
+```
+
 [991. Broken Calculator](https://leetcode.com/problems/broken-calculator/)
 ``` swift
 func brokenCalc(_ X: Int, _ Y: Int) -> Int {
