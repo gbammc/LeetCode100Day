@@ -1,3 +1,75 @@
+[1192. Critical Connections in a Network](https://leetcode.com/problems/critical-connections-in-a-network/)
+``` swift
+// 找不能组成环的边
+// 时间复杂度：O(|E|)
+// 空间复杂度：O(max(|E|, n))
+func criticalConnections(_ n: Int, _ connections: [[Int]]) -> [[Int]] {
+    var rank = [Int](repeating: Int.max, count: n) // 记录访问顺序
+    var visited = [Bool](repeating: false, count: n)
+    var ret = [[Int]]()
+    var graph = [[Int]](repeating: [Int](), count: n)
+    for c in connections {
+        graph[c[0]].append(c[1])
+        graph[c[1]].append(c[0])
+    }
+
+    func dfs(_ cur: Int, _ r: Int, _ pre: Int) {
+        visited[cur] = true
+        rank[cur] = r
+        for next in graph[cur] {
+            if next == pre {
+                continue
+            }
+            if !visited[next] {
+                dfs(next, r + 1, cur)
+            }
+
+            rank[cur] = min(rank[cur], rank[next])
+            if rank[next] >= r + 1 { // 邻点的值没有比现在小，说明不能通过它回到自己或更以前的点
+                ret.append([cur, next])
+            }
+        }
+    }
+
+    dfs(0, 0, -1)
+
+    return ret
+}
+```
+
+[1074. Number of Submatrices That Sum to Target](https://leetcode.com/problems/number-of-submatrices-that-sum-to-target/)
+``` swift
+// Prefix Sum
+// 时间复杂度：O(n * m * m)
+// 空间复杂度：O(n * m)
+func numSubmatrixSumTarget(_ matrix: [[Int]], _ target: Int) -> Int {
+    let n = matrix.count
+    let m = matrix[0].count
+    var res = 0
+    var matrix = matrix
+    for i in 0 ..< n {
+        for j in 1 ..< m {
+            matrix[i][j] += matrix[i][j - 1]
+        }
+    }
+    for j in 0 ..< m {
+        for k in j ..< m {
+            var dict = [0: 1]
+            var csum = 0
+            for i in 0 ..< n {
+                csum += matrix[i][k] - (j > 0 ? matrix[i][j - 1] : 0)
+                if let rest = dict[csum - target] {
+                    res += rest
+                }
+                dict[csum, default: 0] += 1
+            }
+        }
+    }
+    
+    return res
+}
+```
+
 [478. Generate Random Point in a Circle](https://leetcode.com/problems/generate-random-point-in-a-circle/)
 ``` swift
 class Solution {
