@@ -1,3 +1,123 @@
+[1642. Furthest Building You Can Reach](https://leetcode.com/problems/furthest-building-you-can-reach/)
+``` swift
+// 堆、二分
+// 时间复杂度：O(n * log(n))
+// 空间复杂度：O(n)
+func furthestBuilding(_ heights: [Int], _ bricks: Int, _ ladders: Int) -> Int {
+    func canReach(_ target: Int) -> Bool {
+        var heaps = [Int]()
+        for i in 1 ... target where heights[i] - heights[i - 1] > 0 {
+            heaps.append(heights[i] - heights[i - 1])
+        }
+        heaps.sort()
+        var sum = 0
+        if heaps.count > ladders {
+            for i in 0 ..< heaps.count - ladders {
+                sum += heaps[i]
+                if sum > bricks {
+                    return false
+                }
+            }
+        }
+        
+        return true
+    }
+    
+    var l = 0
+    var r = heights.count - 1
+    while l < r {
+        let mid = (l + r + 1) / 2
+        if canReach(mid) {
+            l = mid
+        } else {
+            r = mid - 1
+        }
+    }
+    return l
+}
+```
+
+[34. Find First and Last Position of Element in Sorted Array]()
+``` swift
+// 二分
+// 时间复杂度：O(log(n))
+// 空间复杂度：O(1)
+func searchRange(_ nums: [Int], _ target: Int) -> [Int] {
+    guard nums.count > 0 else { return [-1,-1] }
+    var l = 0
+    var r = nums.count - 1
+    var ret = [Int]()
+    while l < r {
+        let mid = l + (r - l) / 2
+        if nums[mid] < target {
+            l = mid + 1
+        } else {
+            r = mid
+        }
+    }
+    if nums[l] != target {
+        return [-1, -1]
+    }
+    ret.append(l)
+    
+    l = 0
+    r = nums.count - 1
+    while l < r {
+        let mid = (l + r + 1) / 2
+        if nums[mid] <= target {
+            l = mid
+        } else {
+            r = mid - 1
+        }
+    }
+    ret.append(r)
+    
+    return ret
+}
+```
+
+[745. Prefix and Suffix Search](https://leetcode.com/problems/prefix-and-suffix-search/)
+``` swift
+// Trie
+class WordFilter {
+    class Trie {
+        var dict = [Character: Trie]()
+        var index = -1
+    }
+    let root = Trie()
+    init(_ words: [String]) {
+       for (index, word) in words.enumerated() { //O((word.len ^ 2) * words.len )
+           let wArr = Array(word)
+           for i in 0..<wArr.endIndex {
+               let suffix = String(wArr[i..<wArr.endIndex])
+               let target = suffix + "£" + word
+               var curr = root 
+               curr.index = index
+               for char in target {
+                   if curr.dict[char] == nil {
+                       curr.dict[char] = Trie()
+                   }
+                   curr = curr.dict[char]!
+                   curr.index = index
+               }
+           }
+       } 
+    }
+    
+    func f(_ prefix: String, _ suffix: String) -> Int { //O(prefix + suffix)
+        var curr = root
+        let target = suffix + "£" + prefix
+        for char in target {
+            if curr.dict[char] == nil {
+                return -1
+            }
+            curr = curr.dict[char]!
+        }
+        return curr.index
+    }
+}
+```
+
 [1192. Critical Connections in a Network](https://leetcode.com/problems/critical-connections-in-a-network/)
 ``` swift
 // 找不能组成环的边
