@@ -1,3 +1,364 @@
+[968. Binary Tree Cameras](https://leetcode.com/problems/binary-tree-cameras/)
+``` swift
+// DFS
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
+func minCameraCover(_ root: TreeNode?) -> Int {
+    var res = 0
+    func dfs(_ root: TreeNode?) -> Int {
+        guard let node = root else { return 2 }
+
+        if node.left == nil && node.right == nil {
+            return 0
+        }
+
+        let left = dfs(node.left)
+        let right = dfs(node.right)
+        if left == 0 || right == 0 {
+            res += 1
+            return 1
+        } else if left == 1 || right == 1 {
+            return 2
+        }
+
+        return 0
+    }
+
+    return (dfs(root) < 1 ? 1 : 0) + res
+}
+```
+
+[906. Super Palindromes](https://leetcode.com/problems/super-palindromes/)
+``` swift
+func superpalindromesInRange(_ left: String, _ right: String) -> Int {
+    let l = Int(left)!
+    let r = Int(right)!
+    let limits = 1..<100000
+    var result = 0
+
+    for i in limits {
+        var x = appendReversed(i, i / 10)
+        x *= x
+        if x > r { 
+            break 
+        }
+        if x >= l && isPalindrome(x) { 
+            result += 1 
+        }
+    }
+
+    for i in limits {
+        var x = appendReversed(i, i)
+        x *= x
+        if x > r { 
+            break 
+        }
+        if x >= l && isPalindrome(x) { 
+            result += 1 
+        }
+    }
+
+    return result
+}
+
+func appendReversed(_ num: Int, _ x: Int) -> Int {
+    var result = num
+    var dx = x
+    while dx > 0 {
+        result = 10 * result + dx % 10
+        dx /= 10
+    }
+    return result
+}
+
+func isPalindrome(_ x: Int) -> Bool {
+    return appendReversed(0, x) == x
+}
+```
+
+[1354. Construct Target Array With Multiple Sums](https://leetcode.com/problems/construct-target-array-with-multiple-sums/)
+``` swift
+// Heap
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+public struct Heap<T> {
+    
+    var nodes = [T]()
+    
+    private var orderCriteria: (T, T) -> Bool
+    
+    public init(sort: @escaping (T, T) -> Bool) {
+    self.orderCriteria = sort
+    }
+    
+    public var isEmpty: Bool { return nodes.isEmpty }
+    public var count: Int { return nodes.count }
+    
+    @inline(__always) internal func parentIndex(ofIndex i: Int) -> Int { return (i - 1) / 2 }
+    @inline(__always) internal func leftChildIndex(ofIndex i: Int) -> Int { return 2 * i + 1 }
+    @inline(__always) internal func rightChildIndex(ofIndex i: Int) -> Int { return 2 * i + 2 }
+    
+    public mutating func insert(_ value: T) {
+    nodes.append(value)
+    shiftUp(nodes.count - 1)
+    }
+    
+    @discardableResult public mutating func remove() -> T? {
+    guard !nodes.isEmpty else { return nil }
+    if nodes.count == 1 {
+        return nodes.removeLast()
+    } else {
+        let value = nodes[0]
+        nodes[0] = nodes.removeLast()
+        shiftDown(0)
+        return value
+    }
+    }
+    
+    internal mutating func shiftUp(_ index: Int) {
+    var childIndex = index
+    let child = nodes[childIndex]
+    var parentIndex = self.parentIndex(ofIndex: childIndex)
+    while childIndex > 0 && orderCriteria(child, nodes[parentIndex]) {
+        nodes[childIndex] = nodes[parentIndex]
+        childIndex = parentIndex
+        parentIndex = self.parentIndex(ofIndex: childIndex)
+    }
+    nodes[childIndex] = child
+    }
+    
+    internal mutating func shiftDown(from index: Int, until endIndex: Int) {
+    let leftChildIndex = self.leftChildIndex(ofIndex: index)
+    let rightChildIndex = leftChildIndex + 1
+    var first = index
+    if leftChildIndex < endIndex && orderCriteria(nodes[leftChildIndex], nodes[first]) {
+        first = leftChildIndex
+    }
+    if rightChildIndex < endIndex && orderCriteria(nodes[rightChildIndex], nodes[first]) {
+        first = rightChildIndex
+    }
+    if first == index { return }
+    nodes.swapAt(index, first)
+    shiftDown(from: first, until: endIndex)
+    }
+    
+    internal mutating func shiftDown(_ index: Int) {
+    shiftDown(from: index, until: nodes.count)
+    }
+    
+}
+
+func isPossible(_ target: [Int]) -> Bool {
+    var heap = Heap<Int>(sort: >)
+    var sum = 0
+    for n in target {
+        heap.insert(n)
+        sum += n
+    }
+    
+    while let max = heap.remove(), max != 1 {
+        sum -= max
+        if max <= sum || sum < 1 {
+            return false
+        }
+        let new = max % sum
+        heap.insert(new)
+        sum += new
+    }
+    
+    return true
+}
+```
+
+[583. Delete Operation for Two Strings](https://leetcode.com/problems/delete-operation-for-two-strings/)
+``` swift
+// DP，求 Longest Common Subsequence
+// 时间复杂度：O(n * m)
+// 空间复杂度：O(m)
+func minDistance(_ word1: String, _ word2: String) -> Int {
+    let word1 = Array(word1)
+    let word2 = Array(word2)
+    let n = word1.count
+    let m = word2.count
+    var dp = [Int](repeating: 0, count: m + 1)
+    var cur = 0
+    var next = 0
+    for i in 0 ..< n {
+        cur = 0
+        for j in 1 ... m {
+            next = dp[j]
+            if word1[i] == word2[j - 1] {
+                dp[j] = cur + 1
+            } else {
+                dp[j] = max(dp[j - 1], dp[j])
+            }
+            cur = next
+        }
+    }
+    return n + m - 2 * dp[m]
+}
+```
+
+[665. Non-decreasing Array](https://leetcode.com/problems/non-decreasing-array/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func checkPossibility(_ nums: [Int]) -> Bool {
+    guard nums.count > 2 else { return true }
+    
+    var everDec = false
+    var mNums = nums
+    
+    for i in 1..<nums.count where nums[i] < nums[i - 1] {
+        mNums[i] = nums[i - 1]
+        if isValid(mNums, i: i) {
+            return true
+        }
+        
+        mNums[i] = nums[i]
+        mNums[i - 1] = i > 1 ? nums[i - 2] : nums[i]
+        if isValid(mNums, i: i) {
+            return true
+        }
+        
+        return false
+    }
+    
+    return true
+}
+
+func isValid(_ nums: [Int], i: Int) -> Bool {
+    for j in i..<nums.count where nums[j] < nums[j - 1] {
+        return false
+    }
+    
+    return true
+}
+```
+
+[630. Course Schedule III](https://leetcode.com/problems/course-schedule-iii)
+``` swift
+// 二分插入排序
+// 时间复杂度：O(n * log(n))
+// 空间复杂度：O(n)
+func scheduleCourse(_ courses: [[Int]]) -> Int {
+    let courses = courses.sorted { $0[1] < $1[1] }
+    var array = [Int]()
+    var time = 0
+    for c in courses {
+        binaryInsert(&array, c[0])
+        time += c[0]
+        if time > c[1] {
+            time -= array.last!
+            array.removeLast()
+        }
+    }
+    
+    return array.count
+}
+
+func binaryInsert(_ arr: inout [Int], _ val: Int) {
+    var l = 0, r = arr.count-1, idx = 0
+    if r < 0 {
+        arr.append(val)
+        return
+    }
+    while l <= r {
+        let mid = (l+r)/2
+        if arr[mid] == val {
+            idx = mid
+            break
+        } else if arr[mid] < val {
+            l = mid + 1
+            idx = l
+        } else {
+            r = mid-1
+        }
+    }
+    arr.insert(val, at: idx)
+}
+```
+
+[745. Prefix and Suffix Search](https://leetcode.com/problems/prefix-and-suffix-search)
+``` swift
+// Trie
+// 时间复杂度：O(n * m)
+// 空间复杂度：O(n * m)
+class Trie {
+
+    class Node {
+        var val: Character
+        var next = [Character: Node]()
+        var isEnd = false
+        var idx = -1
+
+        var isStart = false
+
+        init(_ val: Character) {
+            self.val = val
+        }
+    }
+
+    var head = Node(Character(" "))
+
+    /** Initialize your data structure here. */
+    init() {
+
+    }
+
+    /** Inserts a word into the trie. */
+    func insert(_ word: String, _ idx: Int) {
+        var cur = head
+        for c in word {
+            if let next = cur.next[c] {
+                cur = next
+            } else {
+                cur.next[c] = Node(c)
+                cur = cur.next[c]!
+            }
+            cur.idx = idx
+        }
+        cur.isEnd = true
+    }
+
+    func search(_ prefix: String, _ surfix: String) -> Int {
+        let target = surfix + "#" + prefix
+        var cur = head
+        for c in target {
+            if let next = cur.next[c] {
+                cur = next
+            } else {
+                return -1
+            }
+        }
+
+        return cur.idx
+    }
+
+}
+
+class WordFilter {
+
+    let trie = Trie()
+
+    init(_ words: [String]) {
+        for (i, word) in words.enumerated() {
+            for n in 0 ..< word.count {
+                // 构造所有后缀的组合
+                let suf = String(word[word.index(word.startIndex, offsetBy: n)...])
+                // 加在单词前，用 # 分割
+                let target = suf + "#" + word
+                trie.insert(target, i)
+            }
+        }
+    }
+
+    func f(_ prefix: String, _ suffix: String) -> Int {
+        return trie.search(prefix, suffix)
+    }
+}
+```
+
 [1642. Furthest Building You Can Reach](https://leetcode.com/problems/furthest-building-you-can-reach/)
 ``` swift
 // 堆、二分
