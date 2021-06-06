@@ -1,3 +1,158 @@
+[164. Maximum Gap](https://leetcode.com/problems/maximum-gap/)
+``` swift
+// 桶排序
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func maximumGap(_ nums: [Int]) -> Int {
+    guard nums.count > 1 else { return 0 }
+    var l = Int.max
+    var u = Int.min
+    for n in nums {
+        l = min(l, n)
+        u = max(u, n)
+    }
+    var gap = max((u - l) / (nums.count - 1), 1)
+    let m = (u - l) / gap + 1  // 桶的数量（以区间划分出每个桶）
+    // 只需记录每个桶的最大最小值
+    var bucketMin = [Int](repeating: Int.max, count: m)
+    var bucketMax = [Int](repeating: Int.min, count: m)
+    for n in nums {
+        let k = (n - l) / gap
+        if n < bucketMin[k] {
+            bucketMin[k] = n
+        }
+        if n > bucketMax[k] {
+            bucketMax[k] = n
+        }
+    }
+    var i = 0
+    var j = 0
+    gap = bucketMax[0] - bucketMin[0]
+    while i < m {
+        j = i + 1
+        // 跳过空的桶
+        while j < m && bucketMin[j] == Int.max && bucketMax[j] == Int.min {
+            j += 1
+        }
+        if j == m {
+            break
+        }
+        gap = max(gap, bucketMin[j] - bucketMax[i])
+        i = j
+    }
+    
+    return gap
+}
+```
+
+[1383. Maximum Performance of a Team](https://leetcode.com/problems/maximum-performance-of-a-team/)
+``` swift
+// Heap
+// 时间复杂度：O(n)
+// 空间复杂度：O(k)
+func maxPerformance(_ n: Int, _ speed: [Int], _ efficiency: [Int], _ k: Int) -> Int {
+    var person = [(Int, Int)]()
+    for i in 0 ..< n {
+        person.append((speed[i], efficiency[i]))
+    }
+    person.sort { $0.1 > $1.1 }
+    
+    var minHeap = Heap<Int>{ $0 < $1 }
+    var speedSum = 0
+    var ret = 0
+    
+    for p in person {
+        speedSum += p.0
+        minHeap.push(p.0)
+        if minHeap.count > k {
+            let s = minHeap.pop()!
+            speedSum -= s
+        }
+        ret = max(ret, speedSum * p.1)
+    }
+    
+    return ret % (1000000007)
+}
+```
+
+[752. Open the Lock](https://leetcode.com/problems/open-the-lock/)
+``` swift
+// BFS
+// 时间复杂度：O(1)
+// 空间复杂度：O(1)
+func openLock(_ deadends: [String], _ target: String) -> Int {
+    var ret = 0
+    var dead = Set<[Int]>()
+    for s in deadends {
+        let nums = Array(s).map { $0.wholeNumberValue! }
+        dead.insert(nums)
+    }
+    if dead.contains([0,0,0,0]) {
+        return -1
+    }
+    let target = Array(target).map { $0.wholeNumberValue! }
+    var queue = [[Int]]()
+    queue.append([0, 0, 0, 0])
+    
+    while queue.count > 0 {
+        let cur = queue
+        queue.removeAll()
+
+        for t in cur {
+            if t == target {
+                return ret
+            }
+            for i in 0 ..< 4 {
+                var new = t
+                new[i] = (new[i] + 1 + 10) % 10
+                if !dead.contains(new) {
+                    dead.insert(new)
+                    queue.append(new)
+                }
+
+                new = t
+                new[i] = (new[i] - 1 + 10) % 10
+                if !dead.contains(new) {
+                    dead.insert(new)
+                    queue.append(new)
+                }
+            }
+        }
+        ret += 1
+    }
+    
+    return -1
+}
+```
+
+[97. Interleaving String](https://leetcode.com/problems/interleaving-string/)
+``` swift
+// DP
+// 时间复杂度：O(n * m)
+// 空间复杂度：O(m)
+func isInterleave(_ s1: String, _ s2: String, _ s3: String) -> Bool {
+    let s1 = Array(s1)
+    let s2 = Array(s2)
+    let s3 = Array(s3)
+    guard s1.count + s2.count == s3.count else { return false }
+    var dp = [Bool](repeating: false, count: s2.count + 1)
+    for i in 0 ... s1.count {
+        for j in 0 ... s2.count {
+            if i == 0 && j == 0 {
+                dp[j] = true
+            } else if i == 0 {
+                dp[j] = dp[j - 1] && s2[j - 1] == s3[i + j - 1]
+            } else if j == 0 {
+                dp[j] = dp[j] && s1[i - 1] == s3[i + j - 1]
+            } else {
+                dp[j] = (dp[j - 1] && s2[j - 1] == s3[i + j - 1]) || (dp[j] && s1[i - 1] == s3[i + j - 1])
+            }
+        }
+    }
+    return dp[s2.count]
+}
+```
+
 [968. Binary Tree Cameras](https://leetcode.com/problems/binary-tree-cameras/)
 ``` swift
 // DFS
