@@ -1,3 +1,209 @@
+[128. Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/)
+``` swift
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func longestConsecutive(_ nums: [Int]) -> Int {
+    let nums = Set<Int>(nums)
+    var ret = 0
+    for n in nums {
+        guard !nums.contains(n - 1) else { continue }
+        var start = n
+        var count = 1
+        while nums.contains(start + 1) {
+            start += 1
+            count += 1
+        }
+        ret = max(ret, count)
+    }
+    return ret
+}
+```
+
+[1383. Maximum Performance of a Team](https://leetcode.com/problems/maximum-performance-of-a-team/)
+``` swift
+// Heap
+func maxPerformance(_ n: Int, _ speed: [Int], _ efficiency: [Int], _ k: Int) -> Int {
+    var person = [(Int, Int)]()
+    for i in 0 ..< n {
+        person.append((speed[i], efficiency[i]))
+    }
+    // 按照效率倒序
+    person.sort { $0.1 > $1.1 }
+    
+    var minHeap = Heap<Int>{ $0 < $1 }
+    var speedSum = 0
+    var ret = 0
+    
+    for p in person {
+        speedSum += p.0
+        minHeap.push(p.0)
+        if minHeap.count > k {
+            let s = minHeap.pop()!
+            speedSum -= s
+        }
+        ret = max(ret, speedSum * p.1)
+    }
+    
+    return ret % (1000000007)
+}
+```
+
+[1696. Jump Game VI](https://leetcode.com/problems/jump-game-vi/)
+``` swift
+// Dequeue
+// 时间复杂度：O(n)
+// 空间复杂度：O(n)
+func maxResult(_ nums: [Int], _ k: Int) -> Int {
+    guard nums.count > 1 else { return nums[0] }
+    var heap = [0]
+    var nums = nums
+    for i in 1 ..< nums.count {
+        nums[i] += nums[heap.first!]
+
+        // 保持 heap 里的序列是递减的
+        while !heap.isEmpty && nums[heap.last!] <= nums[i] {
+            heap.removeLast()
+        }
+        heap.append(i)
+        // 超出范围也要删掉
+        if heap.first! == i - k {
+            heap.removeFirst()
+        }
+    }
+
+    return nums.last!
+}
+```
+
+[1690. Stone Game VII](https://leetcode.com/problems/stone-game-vii/)
+``` swift
+// DP
+// 时间复杂度：O(n * n)
+// 空间复杂度：O(n)
+func stoneGameVII(_ stones: [Int]) -> Int {
+    var cur = [Int](repeating: 0, count: stones.count)
+    var last = [Int](repeating: 0, count: stones.count)
+    for i in stride(from: stones.count - 2, to: -1, by: -1) {
+        (cur, last) = (last, cur)
+        var total = stones[i]
+        for j in i + 1 ..< stones.count {
+            total += stones[j]
+            cur[j] = max(total - stones[i] - last[j], total - stones[j] - cur[j - 1])
+        }
+    }
+    return cur[stones.count - 1]
+}
+```
+
+[128. Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/)
+``` swift
+
+```
+
+[97. Interleaving String](https://leetcode.com/problems/interleaving-string/)
+``` swift
+// DP
+// 时间复杂度：O(n * m)
+// 空间复杂度：O(m)
+func isInterleave(_ s1: String, _ s2: String, _ s3: String) -> Bool {
+    let s1 = Array(s1)
+    let s2 = Array(s2)
+    let s3 = Array(s3)
+    guard s1.count + s2.count == s3.count else { return false }
+    var dp = [Bool](repeating: false, count: s2.count + 1)
+    for i in 0 ... s1.count {
+        for j in 0 ... s2.count {
+            if i == 0 && j == 0 {
+                dp[j] = true
+            } else if i == 0 {
+                dp[j] = dp[j - 1] && s2[j - 1] == s3[i + j - 1]
+            } else if j == 0 {
+                dp[j] = dp[j] && s1[i - 1] == s3[i + j - 1]
+            } else {
+                dp[j] = (dp[j - 1] && s2[j - 1] == s3[i + j - 1]) || (dp[j] && s1[i - 1] == s3[i + j - 1])
+            }
+        }
+    }
+    return dp[s2.count]
+}
+```
+
+[752. Open the Lock](https://leetcode.com/problems/open-the-lock/)
+``` swift
+// BFS
+func openLock(_ deadends: [String], _ target: String) -> Int {
+    var ret = 0
+    var dead = Set<[Int]>()
+    for s in deadends {
+        let nums = Array(s).map { $0.wholeNumberValue! }
+        dead.insert(nums)
+    }
+    if dead.contains([0,0,0,0]) {
+        return -1
+    }
+    let target = Array(target).map { $0.wholeNumberValue! }
+    var queue = [[Int]]()
+    queue.append([0, 0, 0, 0])
+    
+    while queue.count > 0 {
+        let cur = queue
+        queue.removeAll()
+
+        for t in cur {
+            if t == target {
+                return ret
+            }
+            for i in 0 ..< 4 {
+                var new = t
+                new[i] = (new[i] + 1 + 10) % 10
+                if !dead.contains(new) {
+                    dead.insert(new)
+                    queue.append(new)
+                }
+
+                new = t
+                new[i] = (new[i] - 1 + 10) % 10
+                if !dead.contains(new) {
+                    dead.insert(new)
+                    queue.append(new)
+                }
+            }
+        }
+        ret += 1
+    }
+    
+    return -1
+}
+```
+
+[871. Minimum Number of Refueling Stops](https://leetcode.com/problems/minimum-number-of-refueling-stops/)
+``` swift
+// DP
+// 时间复杂度：O(n^2)
+// 空间复杂度：O(n)
+func minRefuelStops(_ target: Int, _ startFuel: Int, _ stations: [[Int]]) -> Int {
+    // dp[i] 代表在 i 个加油站加油后能到达的最远距离
+    var dp = [Int](repeating: 0, count: stations.count + 1)
+    dp[0] = startFuel
+
+    if stations.count > 0 {
+        for i in 1 ... stations.count {
+            for j in stride(from: i, to: -1, by: -1) {
+                if dp[j] >= stations[i - 1][0] {
+                    dp[j + 1] = max(dp[j + 1], dp[j] + stations[i - 1][1])
+                }
+            }
+        }
+    }
+
+    for i in 0 ... stations.count where dp[i] >= target {
+        return i
+    }
+
+    return -1
+}
+```
+
 [164. Maximum Gap](https://leetcode.com/problems/maximum-gap/)
 ``` swift
 // 桶排序
