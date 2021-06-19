@@ -1,3 +1,136 @@
+[22. Generate Parentheses](https://leetcode.com/problems/generate-parentheses/)
+``` swift
+// 回溯
+// 时间复杂度：O(n * n)
+// 空间复杂度：O(n * n)
+func generateParenthesis(_ n: Int) -> [String] {
+    var ret = [String]()
+    func dfs(_ start: Int, _ end: Int, _ str: String) {
+        if str.count == 2 * n {
+            ret.append(str)
+        }
+        if start < n {
+            dfs(start + 1, end, str + "(")
+        }
+        if end < start {
+            dfs(start, end + 1, str + ")")
+        }
+    }
+    dfs(0, 0, "")
+    return ret
+}
+```
+
+[871. Minimum Number of Refueling Stops](https://leetcode.com/problems/minimum-number-of-refueling-stops/)
+``` swift
+// DP
+// 时间复杂度：O(n * n)
+// 空间复杂度：O(n)
+func minRefuelStops(_ target: Int, _ startFuel: Int, _ stations: [[Int]]) -> Int {
+    // dp[i] 代表在 i 个加油站加油后能到达的最远距离
+    var dp = [Int](repeating: 0, count: stations.count + 1)
+    dp[0] = startFuel
+
+    if stations.count > 0 {
+        for i in 1 ... stations.count {
+            for j in stride(from: i, to: -1, by: -1) {
+                if dp[j] >= stations[i - 1][0] {
+                    dp[j + 1] = max(dp[j + 1], dp[j] + stations[i - 1][1])
+                }
+            }
+        }
+    }
+
+    for i in 0 ... stations.count where dp[i] >= target {
+        return i
+    }
+
+    return -1
+}
+```
+
+[307. Range Sum Query - Mutable](https://leetcode.com/problems/range-sum-query-mutable/)
+``` swift
+// 线段树
+// 查询复杂度：O(logn)
+// 更新复杂度：O(logn)]
+// 空间复杂度：O(n)
+class NumArray {
+
+    var count = 0
+    var segTree: [[Int]]
+
+    init(_ nums: [Int]) {
+        count = nums.count
+        segTree = [[Int]](repeating: [Int](repeating: 0, count: 3), count: 4 * count)
+
+        func build(_ i: Int, _ j: Int, _ index: Int) {
+            segTree[index][1] = i
+            segTree[index][2] = j
+
+            if i == j {
+                segTree[index][0] = nums[i]
+                return
+            }
+
+            let mid = (i + j) / 2
+            build(i, mid, 2 * index)
+            build(mid + 1, j, 2 * index + 1)
+
+            segTree[index][0] = segTree[2 * index][0] + segTree[2 * index + 1][0]
+        }
+        build(0, count - 1, 1)
+    }
+
+    func update(_ index: Int, _ val: Int) {
+        func segUpdate(_ index: Int, _ val: Int, _ idx: Int) {
+            let i = segTree[idx][1]
+            let j = segTree[idx][2]
+
+            if i == j && i == index {
+                segTree[idx][0] = val
+                return
+            }
+
+            let mid = (i + j) / 2
+            if index <= mid {
+                segUpdate(index, val, 2 * idx)
+            } else {
+                segUpdate(index, val, 2 * idx + 1)
+            }
+            segTree[idx][0] = segTree[2 * idx][0] + segTree[2 * idx + 1][0]
+        }
+        segUpdate(index, val, 1)
+    }
+
+    func sumRange(_ left: Int, _ right: Int) -> Int {
+        func query(_ l: Int, _ r: Int, _ idx: Int) -> Int {
+            let i = segTree[idx][1]
+            let j = segTree[idx][2]
+
+            if i == l && j == r {
+                return segTree[idx][0]
+            }
+
+            let mid = (i + j) / 2
+            // 在左子树
+            if i <= l && r <= mid {
+                return query(l, r, 2 * idx)
+            }
+            // 在右子树
+            if mid + 1 <= l && r <= j {
+                return query(l, r, 2 * idx + 1)
+            }
+
+            // 拆分再找
+            return query(l, mid, 2 * idx) + query(mid + 1, r, 2 * idx + 1)
+        }
+
+        return query(left, right, 1)
+    }
+}
+```
+
 [128. Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/)
 ``` swift
 // 时间复杂度：O(n)
@@ -93,11 +226,6 @@ func stoneGameVII(_ stones: [Int]) -> Int {
     }
     return cur[stones.count - 1]
 }
-```
-
-[128. Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/)
-``` swift
-
 ```
 
 [97. Interleaving String](https://leetcode.com/problems/interleaving-string/)
