@@ -1,3 +1,29 @@
+[629. K Inverse Pairs Array](https://leetcode.com/problems/k-inverse-pairs-array/)
+``` swift
+// DP
+// 时间复杂度：O(n * k)
+// 空间复杂度：O(n * k)
+func kInversePairs(_ n: Int, _ k: Int) -> Int {
+    guard k > 0 else { return 1 }
+    let mod = 1_000_000_007
+    var dp = [[Int]](repeating: [Int](repeating: 0, count: k + 1), count: n + 1)
+    for i in 0 ... n {
+        dp[i][0] = 1
+    }
+    for i in 1 ... n {
+        for j in 1 ... k {
+            dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+            if j - i >= 0 {
+                dp[i][j] -= dp[i - 1][j - i]
+            }
+            dp[i][j] = (dp[i][j] + mod) % mod
+        }
+    }
+
+    return dp[n][k]
+}
+```
+
 [22. Generate Parentheses](https://leetcode.com/problems/generate-parentheses/)
 ``` swift
 // 回溯
