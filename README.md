@@ -1,3 +1,44 @@
+[473. Matchsticks to Square](https://leetcode.com/problems/matchsticks-to-square/)
+``` swift
+// 回溯
+// 时间复杂度：O(n * k)
+// 空间复杂度：O(n * k)
+func makesquare(_ matchsticks: [Int]) -> Bool {
+    let sum = matchsticks.reduce(0, +)
+    let target = sum / 4
+    if sum % 4 != 0 { 
+        return false 
+    }
+    
+    // 提前返回
+    let matchsticks = matchsticks.sorted(by: >)
+    func dfs(_ i: Int, _ lengths: [Int]) -> Bool {
+        if i == matchsticks.count {
+            for l in lengths where l != target {
+                return false
+            }
+            return true
+        }
+        for j in 0 ..< 4 {
+            if lengths[j] + matchsticks[i] <= target {
+                var lengths = lengths
+                lengths[j] += matchsticks[i]
+                if dfs(i + 1, lengths) {
+                    return true
+                }
+            }
+            // 加快
+            if lengths[j] == 0 {
+                return false
+            }
+        }
+        return false
+    }
+    
+    return dfs(0, [0, 0, 0, 0])
+}
+```
+
 [629. K Inverse Pairs Array](https://leetcode.com/problems/k-inverse-pairs-array/)
 ``` swift
 // DP
