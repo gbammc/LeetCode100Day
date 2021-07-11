@@ -1,3 +1,100 @@
+[639. Decode Ways II](https://leetcode.com/problems/decode-ways-ii/)
+``` swift
+// DP
+// 时间复杂度：O(n * log(n))
+// 空间复杂度：O(n)
+func numDecodings(_ s: String) -> Int {
+    let chars = Array(s)
+    let mod = 1_000_000_007
+    var dp = [Int](repeating: -1, count: chars.count)
+    func decode(_ i: Int) -> Int {
+        if i >= chars.count {
+            return 1
+        }
+
+        if dp[i] != -1 {
+            return dp[i]
+        }
+
+        let isStar = chars[i] == Character("*")
+        let digit: Int = isStar ? 0 : chars[i].wholeNumberValue!
+        var count = 0
+
+        // 转换一个
+        if digit >= 1 && digit <= 9 {
+            count = (count + decode(i + 1)) % mod
+        } else if isStar {
+            count = (count + 9 * decode(i + 1)) % mod
+        }
+
+        if i + 1 >= chars.count {
+            return count
+        }
+
+        // 转换两个
+        if digit == 1 {
+            if chars[i + 1] == Character("*") {
+                count = (count + 9 * decode(i + 2)) % mod
+            } else {
+                count = (count + decode(i + 2)) % mod
+            }
+        } else if digit == 2 {
+            if chars[i + 1] == Character("*") {
+                count = (count + 6 * decode(i + 2)) % mod
+            } else if let d = chars[i + 1].wholeNumberValue, d <= 6 {
+                count = (count + decode(i + 2)) % mod
+            }
+        } else if isStar {
+            if chars[i + 1] == Character("*") {
+                count = (count + 9 * decode(i + 2)) % mod
+                count = (count + 6 * decode(i + 2)) % mod
+            } else {
+                count = (count + decode(i + 2)) % mod
+                if let d = chars[i + 1].wholeNumberValue, d <= 6 {
+                    count = (count + decode(i + 2)) % mod
+                }
+            }
+        }
+
+        dp[i] = count
+
+        return count
+    }
+    return decode(0)
+}
+```
+
+[300. Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/))
+``` swift
+// 二分搜索
+// 时间复杂度：O(n * log(n))
+// 空间复杂度：O(n)
+func lengthOfLIS(_ nums: [Int]) -> Int {
+    var ret = 0
+    var dp = [Int](repeating: 0, count: nums.count)
+
+    for n in nums {
+        var l = 0
+        var r = ret
+        while l < r {
+            let mid = l + (r - l) / 2
+            if dp[mid] >= n {
+                r = mid
+            } else {
+                l = mid + 1
+            }
+        }
+        dp[l] = n
+
+        if l == ret {
+            ret += 1
+        }
+    }
+
+    return ret
+}
+```
+
 [473. Matchsticks to Square](https://leetcode.com/problems/matchsticks-to-square/)
 ``` swift
 // 回溯
@@ -1995,7 +2092,7 @@ class Solution {
 [218. The Skyline Problem](https://leetcode.com/problems/the-skyline-problem/)
 ``` swift
 // 归并排序
-// 时间复杂度：O(nlogn)
+// 时间复杂度：O(n * log(n))
 // 空间复杂度：O(n)
 func getSkyline(_ buildings: [[Int]]) -> [[Int]] {
     func merge(_ A: [(Int, Int)], _ B: [(Int, Int)]) -> [(Int, Int)] {
@@ -2456,7 +2553,7 @@ func permuteUnique(_ nums: [Int]) -> [[Int]] {
 [1283. Find the Smallest Divisor Given a Threshold](https://leetcode.com/problems/find-the-smallest-divisor-given-a-threshold/)
 ``` swift
 // 利用二分搜索加快速度
-// 时间复杂度：O(nlogn)
+// 时间复杂度：O(n * log(n))
 // 空间复杂度：O(1)
 func smallestDivisor(_ nums: [Int], _ threshold: Int) -> Int {
     var l = 1
