@@ -1,3 +1,48 @@
+[295. Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream/)
+``` swift
+// 二分插入排序
+// 时间复杂度：O(n * log(n))
+// 空间复杂度：O(n)
+class MedianFinder {
+
+    var nums = [Int]()
+    
+    func addNum(_ num: Int) {
+        binaryInsert(&nums, num)
+    }
+    
+    func binaryInsert(_ arr: inout [Int], _ val: Int) {
+        var l = 0, r = arr.count - 1, idx = 0
+        if r < 0 {
+            arr.append(val)
+            return
+        }
+        while l <= r {
+            let mid = (l + r) / 2
+            if arr[mid] == val {
+                idx = mid
+                break
+            } else if arr[mid] < val {
+                l = mid + 1
+                //
+                idx = l
+            } else {
+                r = mid - 1
+            }
+        }
+        arr.insert(val, at: idx)
+    }
+    
+    func findMedian() -> Double {
+        if nums.count % 2 == 1 {
+            return Double(nums[nums.count / 2])
+        } else {
+            return (Double(nums[nums.count / 2]) + Double(nums[nums.count / 2 - 1])) / 2.0
+        }
+    }
+}
+```
+
 [639. Decode Ways II](https://leetcode.com/problems/decode-ways-ii/)
 ``` swift
 // DP
@@ -752,51 +797,51 @@ public struct Heap<T> {
     @inline(__always) internal func rightChildIndex(ofIndex i: Int) -> Int { return 2 * i + 2 }
     
     public mutating func insert(_ value: T) {
-    nodes.append(value)
-    shiftUp(nodes.count - 1)
+        nodes.append(value)
+        shiftUp(nodes.count - 1)
     }
     
     @discardableResult public mutating func remove() -> T? {
-    guard !nodes.isEmpty else { return nil }
-    if nodes.count == 1 {
-        return nodes.removeLast()
-    } else {
-        let value = nodes[0]
-        nodes[0] = nodes.removeLast()
-        shiftDown(0)
-        return value
-    }
+        guard !nodes.isEmpty else { return nil }
+        if nodes.count == 1 {
+            return nodes.removeLast()
+        } else {
+            let value = nodes[0]
+            nodes[0] = nodes.removeLast()
+            shiftDown(0)
+            return value
+        }
     }
     
     internal mutating func shiftUp(_ index: Int) {
-    var childIndex = index
-    let child = nodes[childIndex]
-    var parentIndex = self.parentIndex(ofIndex: childIndex)
-    while childIndex > 0 && orderCriteria(child, nodes[parentIndex]) {
-        nodes[childIndex] = nodes[parentIndex]
-        childIndex = parentIndex
-        parentIndex = self.parentIndex(ofIndex: childIndex)
-    }
-    nodes[childIndex] = child
+        var childIndex = index
+        let child = nodes[childIndex]
+        var parentIndex = self.parentIndex(ofIndex: childIndex)
+        while childIndex > 0 && orderCriteria(child, nodes[parentIndex]) {
+            nodes[childIndex] = nodes[parentIndex]
+            childIndex = parentIndex
+            parentIndex = self.parentIndex(ofIndex: childIndex)
+        }
+        nodes[childIndex] = child
     }
     
     internal mutating func shiftDown(from index: Int, until endIndex: Int) {
-    let leftChildIndex = self.leftChildIndex(ofIndex: index)
-    let rightChildIndex = leftChildIndex + 1
-    var first = index
-    if leftChildIndex < endIndex && orderCriteria(nodes[leftChildIndex], nodes[first]) {
-        first = leftChildIndex
-    }
-    if rightChildIndex < endIndex && orderCriteria(nodes[rightChildIndex], nodes[first]) {
-        first = rightChildIndex
-    }
-    if first == index { return }
-    nodes.swapAt(index, first)
-    shiftDown(from: first, until: endIndex)
+        let leftChildIndex = self.leftChildIndex(ofIndex: index)
+        let rightChildIndex = leftChildIndex + 1
+        var first = index
+        if leftChildIndex < endIndex && orderCriteria(nodes[leftChildIndex], nodes[first]) {
+            first = leftChildIndex
+        }
+        if rightChildIndex < endIndex && orderCriteria(nodes[rightChildIndex], nodes[first]) {
+            first = rightChildIndex
+        }
+        if first == index { return }
+        nodes.swapAt(index, first)
+        shiftDown(from: first, until: endIndex)
     }
     
     internal mutating func shiftDown(_ index: Int) {
-    shiftDown(from: index, until: nodes.count)
+        shiftDown(from: index, until: nodes.count)
     }
     
 }
