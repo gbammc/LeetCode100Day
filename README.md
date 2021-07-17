@@ -1,3 +1,81 @@
+[18. 4Sum](https://leetcode.com/problems/4sum/)
+``` swift
+// 双指针
+// 时间复杂度：O(n * n * n)
+// 空间复杂度：O(1)
+func fourSum(_ nums: [Int], _ target: Int) -> [[Int]] {
+    guard nums.count > 3 else { return [] }
+    var ret = Set<[Int]>()
+    let nums = nums.sorted()
+    for i in 3 ..< nums.count {
+        let t = target - nums[i]
+        for j in 2 ... (i - 1) {
+            var l = 0
+            var r = j - 1
+            while l < r {
+                let sum = nums[l] + nums[r] + nums[j]
+                if sum == t {
+                    ret.insert([nums[l], nums[r], nums[j], nums[i]])
+                    r -= 1
+                } else if sum > t {
+                    r -= 1
+                } else {
+                    l += 1
+                }
+            }
+        }
+    }
+    return Array(ret)
+}
+```
+
+[611. Valid Triangle Number](https://leetcode.com/problems/valid-triangle-number/)
+``` swift
+// 双指针
+// 时间复杂度：O(n * n)
+// 空间复杂度：O(1)
+func triangleNumber(_ nums: [Int]) -> Int {
+    guard nums.count > 2 else { return 0 }
+    var ret = 0
+    let nums = nums.sorted()
+    for i in 2 ..< nums.count {
+        var l = 0
+        var r = i - 1
+        while l < r {
+            if nums[l] + nums[r] > nums[i] {
+                ret += r - l
+                r -= 1
+            } else {
+                l += 1
+            }
+        }
+    }
+    return ret
+}
+```
+
+[162. Find Peak Element](https://leetcode.com/problems/find-peak-element/)
+``` swift
+// 二分搜索
+// 时间复杂度：O(log(n))
+// 空间复杂度：O(1)
+func findPeakElement(_ nums: [Int]) -> Int {
+    var l = 0
+    var r = nums.count - 1
+    while l <= r {
+        let mid = l + (r - l) / 2
+        if (mid == 0 || nums[mid - 1] < nums[mid]) && (mid == nums.count - 1 || nums[mid + 1] < nums[mid]) {
+            return mid
+        } else if nums[mid - 1] > nums[mid] {
+            r = mid - 1
+        } else {
+            l = mid + 1
+        }
+    }
+    return l
+}
+```
+
 [295. Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream/)
 ``` swift
 // 二分插入排序
